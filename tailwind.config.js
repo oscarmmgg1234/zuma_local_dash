@@ -11,8 +11,16 @@ module.exports = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'login-background': "url('/public/assets/images/zuma_login.png')"
       },
+      colors: {
+        'zuma-green': '#A5BEBA',
+        'header-dash-color': '#074238',
+        'zuma-login': "#0c5747"
+      }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
