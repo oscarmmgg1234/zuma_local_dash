@@ -72,7 +72,15 @@ callbacks:{
       session.id = token.id;
     }
     return session;
-  }
+  },
+  signIn: async (user, account, profile) => {
+      // Redirect to the user's profile page after signing in
+      return '/';
+    },
+    signOut: async (req, res) => {
+      // Redirect to the home page after signing out
+      return '/';
+    }
 },
 jwt:{
   secret: "f722820f40920467ada1c915bc260c321adce0142fe96b12e293addf9694faea",
