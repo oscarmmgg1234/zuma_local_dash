@@ -28,6 +28,7 @@ const sign_in = async (args) => {
 export default NextAuth({
   secret: "f722820f40920467ada1c915bc260c321adce0142fe96b12e293addf9694faea",
   baseUrl: process.env.NEXTAUTH_URL,
+  callbackUrl: process.env.callbackUrl,
   providers: [
   CredentialsProvider({
     // The name to display on the sign in form (e.g. "Sign in with...")
