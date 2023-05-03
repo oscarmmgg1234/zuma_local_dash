@@ -27,6 +27,7 @@ const sign_in = async (args) => {
 
 export default NextAuth({
   secret: "f722820f40920467ada1c915bc260c321adce0142fe96b12e293addf9694faea",
+  callbackUrl: "http://34.220.205.154:3000/api/auth/callback",
   providers: [
   CredentialsProvider({
     // The name to display on the sign in form (e.g. "Sign in with...")
@@ -44,7 +45,7 @@ export default NextAuth({
       // Add logic here to look up the user from the credentials supplied
       
       const user = await sign_in({email: credentials.email,password: credentials.password});
-
+      console.log(user);
       if (user) {
         // Any object returned will be saved in `user` property of the JWT
         return user

@@ -64,7 +64,6 @@ const Card = tw.div`
   rounded-md
   p-4
 `;
-
 const SubComponent = tw.div`
   bg-gray-100
   rounded-md
