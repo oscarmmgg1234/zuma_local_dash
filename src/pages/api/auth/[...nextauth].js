@@ -73,6 +73,11 @@ callbacks:{
     }
     return session;
   },
+   redirect: async ({url, baseUrl})=>{
+    return url.startsWith(baseUrl)
+      ? Promise.resolve(url)
+      : Promise.resolve(baseUrl)
+  },
 },
 jwt:{
   secret: "f722820f40920467ada1c915bc260c321adce0142fe96b12e293addf9694faea",
