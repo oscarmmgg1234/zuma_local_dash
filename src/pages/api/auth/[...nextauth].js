@@ -74,9 +74,7 @@ callbacks:{
     return session;
   },
    redirect: async ({url, baseUrl})=>{
-    return url.startsWith(baseUrl)
-      ? Promise.resolve(url)
-      : Promise.resolve(baseUrl)
+    return process.env.NEXTAUTH_URL;
   },
 },
 jwt:{
