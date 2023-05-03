@@ -74,6 +74,7 @@ callbacks:{
     return session;
   },
    redirect: async ({url, baseUrl})=>{
+    await new Promise(resolve => setTimeout(resolve, 200));
     return process.env.NEXTAUTH_URL;
   },
 },
