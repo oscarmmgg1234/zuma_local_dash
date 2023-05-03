@@ -17,7 +17,7 @@ export default function Login(){
             redirect: true,
             email: formData.email,
             password: formData.password,
-            callbackUrl: "/"
+            callbackUrl: "http://34.220.205.154:3000/"
         }); // Replace this with your form submission logic
     };    
 
