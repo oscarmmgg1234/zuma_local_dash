@@ -555,7 +555,7 @@ const Employee = () => {
     <>
       <ModalBackground onClick={()=>handleModalClose("rm")} />
       <ModalContainer className="sm:w-11/12 md:w-5/6 lg:w-2/3">
-        <ModalHeader>
+        <ModalHeader className="sticky top-0 z-10 bg-white">
           <ModalTitle className="text-black">Remove Shift Utility</ModalTitle>
           <ModalCloseButton onClick={()=>handleModalClose("rm")}>
             <FaTimes className="w-5 h-5 mr-2" />
@@ -604,7 +604,7 @@ const Employee = () => {
     <>
       <ModalBackground onClick={()=>handleModalClose("gen")} />
       <ModalContainer>
-        <ModalHeader>
+        <ModalHeader className="sticky top-0 z-10 bg-white">
           <ModalTitle className="text-black">Generate Utility</ModalTitle>
           <ModalCloseButton onClick={()=>handleModalClose("gen")}>
           <FaTimes className="w-5 h-5 mr-2" />
