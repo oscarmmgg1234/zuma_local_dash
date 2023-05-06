@@ -91,7 +91,7 @@ const GET_Preview = async (args) => {
     },
     body: data,
   };
-  
+  console.log(`http://34.220.205.154:3000${url_end}`)
   const response = await fetch(`http://34.220.205.154:3000${url_end}`, options);
   const responseData = await response.json();
   return responseData;
