@@ -91,7 +91,7 @@ const GET_Preview = async (args) => {
     },
     body: data,
   };
-  const response = await fetch(`http://34.220.205.154:3000/${url_end}`, options);
+  const response = await fetch("http://34.220.205.154:3000/"+url_end, options);
   const responseData = await response.json();
   return responseData;
 };
