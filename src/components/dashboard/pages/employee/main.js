@@ -501,7 +501,7 @@ const Employee = () => {
   <>
     <ModalBackground onClick={()=>handleModalClose("edit")} />
     <ModalContainer>
-      <ModalHeader>
+      <ModalHeader className="sticky top-0 z-10 bg-white">
         <ModalTitle className="text-black">Edit Utility</ModalTitle>
         <ModalCloseButton onClick={()=>handleModalClose("edit")}>
           <FaTimes className="w-5 h-5 mr-2" />
