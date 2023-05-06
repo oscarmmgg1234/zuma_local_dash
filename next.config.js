@@ -7,9 +7,9 @@ const nextConfig = {
     basePath: '/',
      NEXT_URL:"http://34.220.205.154:3000/",
 NEXTAUTH_URL:"http://34.220.205.154:3000/",
-EMPLOYEE_SERVER_URL:"http://35.163.109.26:3000",
-INVENTORY_SERVER_URL:"http://35.163.109.26:3001",
-AUTH_SERVER_URL:"http://35.163.109.26:3002",
+EMPLOYEE_SERVER_URL:"http://34.220.205.154:3000",
+INVENTORY_SERVER_URL:"http://34.220.205.154:3001",
+AUTH_SERVER_URL:"http://34.220.205.154:3002",
     callbackUrl:"http://34.220.205.154:3000/api/auth/callback"
     
   }
