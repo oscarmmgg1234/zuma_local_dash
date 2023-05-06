@@ -81,7 +81,7 @@ const SubComponent = tw.div`
 //fetch
 const GET_Preview = async (args) => {
   //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
-  const url_end = args.shiftOption == "end" ? "/EmployeeResourcesAPI/PreviewTansformEndShift" : "/EmployeeResourcesAPI/PreviewTansformStartShift";
+  const url_end = args.shiftOption == "end" ? "EmployeeResourcesAPI/PreviewTansformEndShift" : "EmployeeResourcesAPI/PreviewTansformStartShift";
   const data = JSON.stringify({ e_id: args.e_id, date: args.date, hours: args.hours });
   const options = {
     method: 'POST',
@@ -91,8 +91,7 @@ const GET_Preview = async (args) => {
     },
     body: data,
   };
-  console.log(`http://34.220.205.154:3000${url_end}`)
-  const response = await fetch(`http://34.220.205.154:3000${url_end}`, options);
+  const response = await fetch(`http://34.220.205.154:3000/${url_end}`, options);
   const responseData = await response.json();
   return responseData;
 };
@@ -109,7 +108,6 @@ const transform_shift = async (args) => {
     },
     body: data,
   };
-  console.log(`http://34.220.205.154:3000${url_end}`)
   const response = await fetch(`http://34.220.205.154:3000${url_end}`, options);
   const responseData = await response.json();
   return responseData;
