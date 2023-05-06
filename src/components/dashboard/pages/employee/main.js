@@ -594,40 +594,43 @@ const Employee = () => {
 
       {/* gen modal */}
       {isModalGenOpen && (
-  <>
-    <ModalBackground onClick={()=>handleModalClose("gen")} />
-    <ModalContainer className="max-w-xl mx-auto p-4">
-      <ModalHeader>
-        <ModalTitle className="text-black">Generate Utility</ModalTitle>
-        <ModalCloseButton onClick={()=>handleModalClose("gen")}>
+    <>
+      <ModalBackground onClick={()=>handleModalClose("gen")} />
+      <ModalContainer>
+        <ModalHeader>
+          <ModalTitle className="text-black">Generate Utility</ModalTitle>
+          <ModalCloseButton onClick={()=>handleModalClose("gen")}>
           <FaTimes className="w-5 h-5 mr-2" />
-        </ModalCloseButton>
-      </ModalHeader>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 md:gap-4">
-        <div className="mb-4 md:mb-0">
-          <p className="text-black">Select Employee</p>
-          <DropdownButton setData={setEmp} dataValue={emp} data={{data: EmpData}}/>
+          </ModalCloseButton>
+        </ModalHeader>
+        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border border-b-2 border-black/20">
+       
+          <div className="mb-4 md:mb-0">
+            <p className="text-black">Select Employee</p>
+            <DropdownButton setData={setEmp} dataValue={emp} data={{data: EmpData}}/>
+          </div>
+          <div className="mb-4 md:mb-0">
+            <p className="text-black">Select Date</p>
+            <Datepicker selected={selectedDate1} setSelected={setSelectedDate1}/>
+          </div>
+          <div>
+            <p className="text-black">Select Date</p>
+            <Datepicker selected={selectedDate2} setSelected={setSelectedDate2}/>
+          </div>
         </div>
-        <div className="mb-4 md:mb-0">
-          <p className="text-black">Start Date</p>
-          <Datepicker selected={selectedDate1} setSelected={setSelectedDate1}/>
-        </div>
-        <div className="mb-4 md:mb-0">
-          <p className="text-black">End Date</p>
-          <Datepicker selected={selectedDate2} setSelected={setSelectedDate2}/>
-        </div>
-      </div>
-      <PdfViewer fileBlob={pdfBlob} />
-      <div className="flex justify-center items-center mt-8 md:mt-20 mb-8 md:mb-20">
-        <button 
-          className="bg-zuma-green text-white py-2 px-4 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-zuma-green-dark focus:ring-opacity-50"
-          onClick={() => {gen_pdf({e_id: empData, date1: selectedDate1, date2: selectedDate2})}}
-        >
-          Generate PDF
-        </button>
-      </div>
-    </ModalContainer>
-  </>
+        
+       <PdfViewer fileBlob={pdfBlob} />
+       <div className="flex justify-center items-center mt-8 md:mt-20 mb-8 md:mb-20">
+          <button 
+            className="bg-zuma-green text-white py-2 px-4 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-zuma-green-dark focus:ring-opacity-50"
+            onClick={() => {gen_pdf({e_id: empData, date1: selectedDate1, date2: selectedDate2})}}
+          >
+            Generate PDF
+          </button>
+       </div>
+        
+      </ModalContainer>
+    </>
 )}
 
     
