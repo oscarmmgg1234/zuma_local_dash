@@ -15,7 +15,7 @@ const sign_in = async (args) => {
     credentials: 'include'
   };
 
-  const response = await fetch(`http://34.220.205.154:3002/signin`, options);
+  const response = await fetch(`http://35.163.109.26:3002/signin`, options);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -46,9 +46,9 @@ export default NextAuth({
       // Add logic here to look up the user from the credentials supplied
       
       const user = await sign_in({email: credentials.email,password: credentials.password});
+      console.log(user);
       if (user) {
         // Any object returned will be saved in `user` property of the JWT
-        console.log(user);
         return user
       } else {
         // If you return null then an error will be displayed advising the user to check their details.
