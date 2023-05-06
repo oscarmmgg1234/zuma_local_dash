@@ -609,11 +609,11 @@ const Employee = () => {
           <DropdownButton setData={setEmp} dataValue={emp} data={{data: EmpData}}/>
         </div>
         <div className="mb-4 md:mb-0">
-          <p className="text-black">Select Date</p>
+          <p className="text-black">Start Date</p>
           <Datepicker selected={selectedDate1} setSelected={setSelectedDate1}/>
         </div>
         <div className="mb-4 md:mb-0">
-          <p className="text-black">Select Date</p>
+          <p className="text-black">End Date</p>
           <Datepicker selected={selectedDate2} setSelected={setSelectedDate2}/>
         </div>
       </div>
