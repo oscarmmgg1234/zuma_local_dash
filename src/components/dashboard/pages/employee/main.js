@@ -195,8 +195,10 @@ const Datepicker = ({selected, setSelected}) => {
 const PdfViewer = ({ fileBlob }) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
+  const [showPrint, setShowPrint] = useState(false);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
+    setShowPrint(true);
     setNumPages(numPages);
   };
 
@@ -215,23 +217,28 @@ const PdfViewer = ({ fileBlob }) => {
         </Document>
       </div>
       <div className="flex items-center space-x-2">
-  <button
-    onClick={handlePrint}
-    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md"
-  >
-    <FaPrint className="mr-2" /> Print
-  </button>
+
+  {showPrint && (
+      <button
+  onClick={handlePrint}
+  className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md block mx-auto my-4 mr-5 items-center justify-center flex"
+>
+  <FaPrint className="mr-2" /> Print
+</button>
+)}
   <div className="text-gray-500 flex items-center">
-    <span className="mr-2">
-      Page {pageNumber} of {numPages}
-    </span>
-    <button
+
+  <button
       onClick={() => setPageNumber(pageNumber - 1)}
       disabled={pageNumber <= 1}
       className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-2 py-1 rounded-md mr-2"
     >
       Prev
     </button>
+    <span className="mr-2">
+      Page {pageNumber} of {numPages}
+    </span>
+   
     <button
       onClick={() => setPageNumber(pageNumber + 1)}
       disabled={pageNumber >= numPages}
