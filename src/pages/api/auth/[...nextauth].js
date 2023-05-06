@@ -15,7 +15,7 @@ const sign_in = async (args) => {
     credentials: 'include'
   };
 
-  const response = await fetch(`${process.env.AUTH_SERVER_URL}/signin`, options);
+  const response = await fetch(`http://34.220.205.154:3002/signin`, options);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -48,6 +48,7 @@ export default NextAuth({
       const user = await sign_in({email: credentials.email,password: credentials.password});
       if (user) {
         // Any object returned will be saved in `user` property of the JWT
+        console.log(user);
         return user
       } else {
         // If you return null then an error will be displayed advising the user to check their details.
