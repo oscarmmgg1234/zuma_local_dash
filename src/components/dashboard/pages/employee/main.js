@@ -80,7 +80,6 @@ const SubComponent = tw.div`
 
 //fetch
 const GET_Preview = async (args) => {
-  console.log(args.shiftOption);
   //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
   const url_end = args.shiftOption == "end" ? "EmployeeResourcesAPI/PreviewTansformEndShift" : "EmployeeResourcesAPI/PreviewTansformStartShift";
   const data = JSON.stringify({ e_id: args.e_id, date: args.date, hours: args.hours });
@@ -480,15 +479,15 @@ const Employee = () => {
     
     </CardGrid>
    
-    <div className="fixed bottom-0 left-0 w-full bg-red-500 py-2">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <AlertCard title="Employee Alert" message="Jennifer missed today." />
-          <AlertCard title="Shift Alert" message="Oscar changed his end shift" />
-          <AlertCard title="Generation Alert" message="Generated Time Report for Oscar" />
-        </div>
-      </div>
+    <div className="hidden lg:block fixed bottom-0 left-0 w-full bg-red-500 py-2">
+  <div className="max-w-7xl mx-auto px-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <AlertCard title="Employee Alert" message="Jennifer missed today." />
+      <AlertCard title="Shift Alert" message="Oscar changed his end shift" />
+      <AlertCard title="Generation Alert" message="Generated Time Report for Oscar" />
     </div>
+  </div>
+</div>
   
       {/* edit modal */}
     {isModalEditOpen && (
