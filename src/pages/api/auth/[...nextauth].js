@@ -74,7 +74,7 @@ callbacks:{
     return session;
   },
    redirect: async ({url, baseUrl})=>{
-    return "http://34.220.205.154:3000/";
+    return process.env.NEXTAUTH_URL;
   },
 },
 jwt:{
