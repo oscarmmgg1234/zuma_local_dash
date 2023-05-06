@@ -545,52 +545,52 @@ const Employee = () => {
 )}
       {/* rm modal */}
       {isModalRmOpen && (
-  <>
-    <ModalBackground onClick={()=>handleModalClose("rm")} />
-    <ModalContainer className="sm:w-11/12 md:w-10/12 lg:w-8/12">
-      <ModalHeader>
-        <ModalTitle className="text-black">Remove Shift Utility</ModalTitle>
-        <ModalCloseButton onClick={()=>handleModalClose("rm")}>
-          <FaTimes className="w-5 h-5 mr-2" />
-        </ModalCloseButton>
-      </ModalHeader>
-      <>
-      {status == null ? (
+    <>
+      <ModalBackground onClick={()=>handleModalClose("rm")} />
+      <ModalContainer className="sm:w-11/12 md:w-5/6 lg:w-2/3">
+        <ModalHeader>
+          <ModalTitle className="text-black">Remove Shift Utility</ModalTitle>
+          <ModalCloseButton onClick={()=>handleModalClose("rm")}>
+            <FaTimes className="w-5 h-5 mr-2" />
+          </ModalCloseButton>
+        </ModalHeader>
         <>
-          <div className="p-4 grid grid-cols-2 gap-4 border border-b-2 border-black/20">
-            <div>
-              <p className="text-black">Select Employee</p>
-              <DropdownButton setData={setEmployee} dataValue={employee} data={{data: EmpOptions}}/>
-            </div>
-            <div>
-              <p className="text-black">Select Date</p>
-              <Datepicker selected={selectedDate} setSelected={setSelectedDate}/>
-            </div>
-          </div>
-          <div className="text-black flex justify-center items-center text-3xl mt-20">
-            <div className="w-auto h-auto text-center opacity-50">
-              {previewData.length > 0 ? (
+          {status == null ? (
+            <>
+              <div className="p-4 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 border border-b-2 border-black/20">
                 <div>
-                  {employee}
-                  {previewData.map(obj=>{if(obj.SHIFT_CHANGE == true){return <div key={obj.SHIFT_DATE} className="bg-red-500/80 rounded-lg">{obj.SHIFT_DATE}</div>}else{return <div key={obj.SHIFT_DATE} >{obj.SHIFT_DATE}</div>}})}
+                  <p className="text-black">Select Employee</p>
+                  <DropdownButton setData={setEmployee} dataValue={employee} data={{data: EmpOptions}}/>
                 </div>
-              ) : (
-                <div> Loading Preview...</div>
-              )}
-            </div>
-          </div>
-          <div className="flex justify-around items-center mt-20">
-            <button className="rounded-lg text-black border border-3 bg-zuma-green/80 px-4 py-2" onClick={()=>{removePreviewData({e_id: selEmployeeData, date: selectedDate, shiftOption: shiftOption, hours: hours})}}>Preview Change</button>    
-            <button className="rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2" onClick={()=>{submitRemove({e_id: selEmployeeData, date: selectedDate, shiftOption: shiftOption, hours: hours})}}>Change Shift Entry</button>
-          </div>
+                <div>
+                  <p className="text-black">Select Date</p>
+                  <Datepicker selected={selectedDate} setSelected={setSelectedDate}/>
+                </div>
+              </div>
+              <div className="text-black flex justify-center items-center text-3xl mt-20">
+                <div className="w-auto h-auto text-center opacity-50">
+                  {previewData.length > 0 ? (
+                    <div>
+                      {employee}
+                      {previewData.map(obj=>{if(obj.SHIFT_CHANGE == true){return <div key={obj.SHIFT_DATE} className="bg-red-500/80 rounded-lg">{obj.SHIFT_DATE}</div>}else{return <div key={obj.SHIFT_DATE} >{obj.SHIFT_DATE}</div>}})}
+                    </div>
+                  ) : (
+                    <div> Loading Preview...</div>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
+                <button className="w-full sm:w-auto rounded-lg text-black border border-3 bg-zuma-green/80 px-4 py-2 sm:mr-4 mb-4 sm:mb-0" onClick={()=>{removePreviewData({e_id: selEmployeeData, date: selectedDate, shiftOption: shiftOption, hours: hours})}}>Preview Change</button>    
+                <button className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2" onClick={()=>{submitRemove({e_id: selEmployeeData, date: selectedDate, shiftOption: shiftOption, hours: hours})}}>Change Shift Entry</button>
+              </div>
+            </>
+          ) : (
+            <div className="text-gray-900 font-bold"> Entry Removed!</div>
+          )}
         </>
-      ) : (
-        <div className="text-gray-900 font-bold"> Entry Removed!</div>
-      )}
-      </>
-    </ModalContainer>
-  </>
-)}
+      </ModalContainer>
+    </>
+  )}
 
       {/* gen modal */}
       {isModalGenOpen && (
