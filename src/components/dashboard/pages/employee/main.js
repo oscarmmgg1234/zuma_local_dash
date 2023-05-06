@@ -545,85 +545,91 @@ const Employee = () => {
 )}
       {/* rm modal */}
       {isModalRmOpen && (
+  <>
+    <ModalBackground onClick={()=>handleModalClose("rm")} />
+    <ModalContainer className="sm:w-11/12 md:w-10/12 lg:w-8/12">
+      <ModalHeader>
+        <ModalTitle className="text-black">Remove Shift Utility</ModalTitle>
+        <ModalCloseButton onClick={()=>handleModalClose("rm")}>
+          <FaTimes className="w-5 h-5 mr-2" />
+        </ModalCloseButton>
+      </ModalHeader>
+      <>
+      {status == null ? (
         <>
-          <ModalBackground onClick={()=>handleModalClose("rm")} />
-          <ModalContainer>
-            <ModalHeader>
-              <ModalTitle className="text-black">Remove Shift Utility</ModalTitle>
-              <ModalCloseButton onClick={()=>handleModalClose("rm")}>
-              <FaTimes className="w-5 h-5 mr-2" />
-              </ModalCloseButton>
-            </ModalHeader>
-            <>
-            
-            {status == null ? <>
-            <div className="p-4 grid grid-cols-2 border border-b-2 border-black/20">
-           
-              <div >
-                <p className="text-black">Select Employee</p>
+          <div className="p-4 grid grid-cols-2 gap-4 border border-b-2 border-black/20">
+            <div>
+              <p className="text-black">Select Employee</p>
               <DropdownButton setData={setEmployee} dataValue={employee} data={{data: EmpOptions}}/>
-              </div>
-              <div>
-                <p className="text-black">Select Date</p>
-              <Datepicker selected={selectedDate} setSelected={setSelectedDate}/>
-              </div>
             </div>
-            <div className="text-black flex justify-center items-center text-3xl mt-20">
-            <div className="w-auto h-auto text-center opacity-50">
-            {previewData.length > 0 ? <div> {employee}{previewData.map(obj=>{if(obj.SHIFT_CHANGE == true){return <div key={obj.SHIFT_DATE} className="bg-red-500/80 rounded-lg">{obj.SHIFT_DATE}</div>}else{return <div key={obj.SHIFT_DATE} >{obj.SHIFT_DATE}</div>}})} </div>: <div> Loading Preview...</div>}
-            
+            <div>
+              <p className="text-black">Select Date</p>
+              <Datepicker selected={selectedDate} setSelected={setSelectedDate}/>
             </div>
           </div>
-            <div className="flex justify-around items-center mt-20">
+          <div className="text-black flex justify-center items-center text-3xl mt-20">
+            <div className="w-auto h-auto text-center opacity-50">
+              {previewData.length > 0 ? (
+                <div>
+                  {employee}
+                  {previewData.map(obj=>{if(obj.SHIFT_CHANGE == true){return <div key={obj.SHIFT_DATE} className="bg-red-500/80 rounded-lg">{obj.SHIFT_DATE}</div>}else{return <div key={obj.SHIFT_DATE} >{obj.SHIFT_DATE}</div>}})}
+                </div>
+              ) : (
+                <div> Loading Preview...</div>
+              )}
+            </div>
+          </div>
+          <div className="flex justify-around items-center mt-20">
             <button className="rounded-lg text-black border border-3 bg-zuma-green/80 px-4 py-2" onClick={()=>{removePreviewData({e_id: selEmployeeData, date: selectedDate, shiftOption: shiftOption, hours: hours})}}>Preview Change</button>    
-          <button className="rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2" onClick={()=>{submitRemove({e_id: selEmployeeData, date: selectedDate, shiftOption: shiftOption, hours: hours})}}>Change Shift Entry</button>
-          </div> </> : <div className="text-gray-900 font-bold"> Entry Removed!</div> }
-            </>
-         
-      
-          </ModalContainer>
+            <button className="rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2" onClick={()=>{submitRemove({e_id: selEmployeeData, date: selectedDate, shiftOption: shiftOption, hours: hours})}}>Change Shift Entry</button>
+          </div>
         </>
+      ) : (
+        <div className="text-gray-900 font-bold"> Entry Removed!</div>
       )}
+      </>
+    </ModalContainer>
+  </>
+)}
+
       {/* gen modal */}
       {isModalGenOpen && (
-        <>
-          <ModalBackground onClick={()=>handleModalClose("gen")} />
-          <ModalContainer>
-            <ModalHeader>
-              <ModalTitle className="text-black">Generate Utility</ModalTitle>
-              <ModalCloseButton onClick={()=>handleModalClose("gen")}>
-              <FaTimes className="w-5 h-5 mr-2" />
-              </ModalCloseButton>
-            </ModalHeader>
-            <div className="p-4 grid grid-cols-3 border border-b-2 border-black/20">
-           
-              <div >
-                <p className="text-black">Select Employee</p>
-              <DropdownButton setData={setEmp} dataValue={emp} data={{data: EmpData}}/>
-              </div>
-              <div>
-                <p className="text-black">Select Date</p>
-              <Datepicker selected={selectedDate1} setSelected={setSelectedDate1}/>
-              </div>
-              <div>
-                <p className="text-black">Select Date</p>
-              <Datepicker selected={selectedDate2} setSelected={setSelectedDate2}/>
-              </div>
-            </div>
-            
-           <PdfViewer fileBlob={pdfBlob} />
-           <div className="flex justify-center items-center mt-20 mb-20">
-  <button 
-    className="bg-zuma-green text-white py-2 px-4 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-zuma-green-dark focus:ring-opacity-50"
-    onClick={() => {gen_pdf({e_id: empData, date1: selectedDate1, date2: selectedDate2})}}
-  >
-    Generate PDF
-  </button>
-</div>
-            
-          </ModalContainer>
-        </>
-      )}
+  <>
+    <ModalBackground onClick={()=>handleModalClose("gen")} />
+    <ModalContainer className="max-w-xl mx-auto p-4">
+      <ModalHeader>
+        <ModalTitle className="text-black">Generate Utility</ModalTitle>
+        <ModalCloseButton onClick={()=>handleModalClose("gen")}>
+          <FaTimes className="w-5 h-5 mr-2" />
+        </ModalCloseButton>
+      </ModalHeader>
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 md:gap-4">
+        <div className="mb-4 md:mb-0">
+          <p className="text-black">Select Employee</p>
+          <DropdownButton setData={setEmp} dataValue={emp} data={{data: EmpData}}/>
+        </div>
+        <div className="mb-4 md:mb-0">
+          <p className="text-black">Select Date</p>
+          <Datepicker selected={selectedDate1} setSelected={setSelectedDate1}/>
+        </div>
+        <div className="mb-4 md:mb-0">
+          <p className="text-black">Select Date</p>
+          <Datepicker selected={selectedDate2} setSelected={setSelectedDate2}/>
+        </div>
+      </div>
+      <PdfViewer fileBlob={pdfBlob} />
+      <div className="flex justify-center items-center mt-8 md:mt-20 mb-8 md:mb-20">
+        <button 
+          className="bg-zuma-green text-white py-2 px-4 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-zuma-green-dark focus:ring-opacity-50"
+          onClick={() => {gen_pdf({e_id: empData, date1: selectedDate1, date2: selectedDate2})}}
+        >
+          Generate PDF
+        </button>
+      </div>
+    </ModalContainer>
+  </>
+)}
+
     
 
 
