@@ -83,7 +83,6 @@ const GET_Preview = async (args) => {
   console.log(args.shiftOption);
   //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
   const url_end = args.shiftOption == "end" ? "EmployeeResourcesAPI/PreviewTansformEndShift" : "EmployeeResourcesAPI/PreviewTansformStartShift";
-  
   const data = JSON.stringify({ e_id: args.e_id, date: args.date, hours: args.hours });
   const options = {
     method: 'POST',
@@ -93,7 +92,7 @@ const GET_Preview = async (args) => {
     },
     body: data,
   };
-  const response = await fetch(`http://34.220.205.154:3000/${url_end}`, options);
+  const response = await fetch(`http://35.163.109.26:3000/${url_end}`, options);
   const responseData = await response.json();
   return responseData;
 };
@@ -111,7 +110,7 @@ const transform_shift = async (args) => {
     body: data,
   };
 
-  const response = await fetch(`http://34.220.205.154:3000${url_end}`, options);
+  const response = await fetch(`http://35.163.109.26:3000${url_end}`, options);
   const responseData = await response.json();
   return responseData;
 };
@@ -130,7 +129,7 @@ const pdf_get = async (args) => {
     body: data,
   };
   
-  const response = await fetch(`http://34.220.205.154:3000${url_end}`, options);
+  const response = await fetch(`http://35.163.109.26:3000${url_end}`, options);
   return response.blob();
 };
 
@@ -146,7 +145,7 @@ const removeShift = async (args) => {
     body: data,
   };
   
-  const response = await fetch(`http://34.220.205.154:3000/EmployeeResourcesAPI/RemoveShift`, options);
+  const response = await fetch(`http://35.163.109.26:3000/EmployeeResourcesAPI/RemoveShift`, options);
   const responseData = await response.json();
   return responseData;
 };
@@ -162,7 +161,7 @@ const previewRemoveShift = async (args) => {
     body: data,
   };
   
-  const response = await fetch(`http://34.220.205.154:3000/EmployeeResourcesAPI/PreviewRemoveShift`, options);
+  const response = await fetch(`http://35.163.109.26:3000/EmployeeResourcesAPI/PreviewRemoveShift`, options);
   const responseData = await response.json();
   return responseData;
 }
