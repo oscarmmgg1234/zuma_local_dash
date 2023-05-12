@@ -816,7 +816,10 @@ const Employee = () => {
                               obj.SHIFT_DATE == "Called Off"
                             ) {
                               return (
-                                <div className="flex items-center">
+                                <div
+                                  className="flex items-center"
+                                  key={obj.SHIFT_DATE}
+                                >
                                   <div
                                     key={obj.SHIFT_DATE}
                                     className="bg-red-500/80 rounded-lg mr-2 py-1 px-2"
