@@ -1,13 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
-import { FaTimes,FaPrint,FaEye } from "react-icons/fa";
+import { FaTimes, FaPrint, FaEye } from "react-icons/fa";
 import DatePicker from "react-datepicker";
-import { Document, Page, pdfjs } from 'react-pdf';
+import { Document, Page, pdfjs } from "react-pdf";
 import "react-datepicker/dist/react-datepicker.css";
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/esm/Page/TextLayer.css';
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import "react-pdf/dist/esm/Page/TextLayer.css";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-
 
 const ModalBackground = tw.div`
   fixed
@@ -43,8 +42,6 @@ const ModalHeader = tw.div`
   border-gray-400
 `;
 
-
-
 const ModalTitle = tw.h2`
   text-lg
   font-medium
@@ -54,7 +51,6 @@ const ModalCloseButton = tw.button`
   focus:outline-none
   text-black
 `;
-
 
 const CardGrid = tw.div`
   grid
@@ -77,17 +73,45 @@ const SubComponent = tw.div`
   p-4
 `;
 
+function Slider({ value, onChange }) {
+  const handleToggle = () => {
+    onChange(!value);
+  };
 
+  return (
+    <div className="relative inline-block w-10 mr-2 align-middle select-none">
+      <input
+        type="checkbox"
+        name="toggle"
+        id="toggle"
+        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+        checked={value}
+        onChange={handleToggle}
+      />
+      <label
+        htmlFor="toggle"
+        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+      ></label>
+    </div>
+  );
+}
 //fetch
 const GET_Preview = async (args) => {
   //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
-  const url_end = args.shiftOption == "end" ? "EmployeeResourcesAPI/PreviewTansformEndShift" : "EmployeeResourcesAPI/PreviewTansformStartShift";
-  const data = JSON.stringify({ e_id: args.e_id, date: args.date, hours: args.hours });
+  const url_end =
+    args.shiftOption == "end"
+      ? "EmployeeResourcesAPI/PreviewTansformEndShift"
+      : "EmployeeResourcesAPI/PreviewTansformStartShift";
+  const data = JSON.stringify({
+    e_id: args.e_id,
+    date: args.date,
+    hours: args.hours,
+  });
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': data.length
+      "Content-Type": "application/json",
+      "Content-Length": data.length,
     },
     body: data,
   };
@@ -98,13 +122,20 @@ const GET_Preview = async (args) => {
 
 const transform_shift = async (args) => {
   //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
-  const url_end = args.shiftOption == "end" ? "/EmployeeResourcesAPI/TansformEndShift" : "/EmployeeResourcesAPI/TansformStartShift";
-  const data = JSON.stringify({ e_id: args.e_id, date: args.date, hours: args.hours });
+  const url_end =
+    args.shiftOption == "end"
+      ? "/EmployeeResourcesAPI/TansformEndShift"
+      : "/EmployeeResourcesAPI/TansformStartShift";
+  const data = JSON.stringify({
+    e_id: args.e_id,
+    date: args.date,
+    hours: args.hours,
+  });
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': data.length
+      "Content-Type": "application/json",
+      "Content-Length": data.length,
     },
     body: data,
   };
@@ -116,55 +147,71 @@ const transform_shift = async (args) => {
 
 const pdf_get = async (args) => {
   //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
-  
-  const url_end = args.e_id == "PRINT_ALL" ? "/EmployeeResourcesAPI/Generate_Time_sheet_all" : "/EmployeeResourcesAPI/Generate_Time_sheet";
-  const data = JSON.stringify({ employee_id: args.e_id, shift_start_range: args.date1, shift_end_range: args.date2 });
+
+  const url_end =
+    args.e_id == "PRINT_ALL"
+      ? "/EmployeeResourcesAPI/Generate_Time_sheet_all"
+      : "/EmployeeResourcesAPI/Generate_Time_sheet";
+  const data = JSON.stringify({
+    employee_id: args.e_id,
+    shift_start_range: args.date1,
+    shift_end_range: args.date2,
+  });
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': data.length
+      "Content-Type": "application/json",
+      "Content-Length": data.length,
     },
     body: data,
   };
-  
+
   const response = await fetch(`http://35.163.109.26:3000${url_end}`, options);
   return response.blob();
 };
 
 const removeShift = async (args) => {
   //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
-  const data = JSON.stringify({ e_id: args.e_id, date: args.date});
+  const data = JSON.stringify({
+    e_id: args.e_id,
+    date: args.date,
+    revert: args.revert,
+  });
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': data.length
+      "Content-Type": "application/json",
+      "Content-Length": data.length,
     },
     body: data,
   };
-  
-  const response = await fetch(`http://35.163.109.26:3000/EmployeeResourcesAPI/RemoveShift`, options);
+
+  const response = await fetch(
+    `http://35.163.109.26:3000/EmployeeResourcesAPI/RemoveShift`,
+    options
+  );
   const responseData = await response.json();
   return responseData;
 };
 
 const previewRemoveShift = async (args) => {
-  const data = JSON.stringify({ e_id: args.e_id, date: args.date, hours: "1"});
+  const data = JSON.stringify({ e_id: args.e_id, date: args.date, hours: "1" });
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': data.length
+      "Content-Type": "application/json",
+      "Content-Length": data.length,
     },
     body: data,
   };
-  
-  const response = await fetch(`http://35.163.109.26:3000/EmployeeResourcesAPI/PreviewRemoveShift`, options);
+
+  const response = await fetch(
+    `http://35.163.109.26:3000/EmployeeResourcesAPI/PreviewRemoveShift`,
+    options
+  );
   const responseData = await response.json();
   return responseData;
-}
-
+};
 
 //third party components
 
@@ -177,8 +224,7 @@ const AlertCard = ({ title, message }) => {
   );
 };
 
-const Datepicker = ({selected, setSelected}) => {
-
+const Datepicker = ({ selected, setSelected }) => {
   const handleChange = (date) => {
     setSelected(date);
   };
@@ -208,58 +254,50 @@ const PdfViewer = ({ fileBlob }) => {
     URL.revokeObjectURL(pdfUrl);
   };
 
- 
   return (
     <div className="flex flex-col items-center mt-20 border-b-2 border-gray-400/50 py-2">
       <div className="bg-gray-200 p-4 rounded-md shadow-md my-4">
-        <Document file={fileBlob} onLoadSuccess={onDocumentLoadSuccess} >
+        <Document file={fileBlob} onLoadSuccess={onDocumentLoadSuccess}>
           <Page pageNumber={pageNumber} size={"letter"} />
         </Document>
       </div>
       <div className="flex items-center space-x-2">
+        {showPrint && (
+          <button
+            onClick={handlePrint}
+            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md block mx-auto my-4 mr-5 items-center justify-center flex"
+          >
+            <FaPrint className="mr-2" /> Print
+          </button>
+        )}
+        <div className="text-gray-500 flex items-center">
+          <button
+            onClick={() => setPageNumber(pageNumber - 1)}
+            disabled={pageNumber <= 1}
+            className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-2 py-1 rounded-md mr-2"
+          >
+            Prev
+          </button>
+          <span className="mr-2">
+            Page {pageNumber} of {numPages}
+          </span>
 
-  {showPrint && (
-      <button
-  onClick={handlePrint}
-  className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md block mx-auto my-4 mr-5 items-center justify-center flex"
->
-  <FaPrint className="mr-2" /> Print
-</button>
-)}
-  <div className="text-gray-500 flex items-center">
-
-  <button
-      onClick={() => setPageNumber(pageNumber - 1)}
-      disabled={pageNumber <= 1}
-      className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-2 py-1 rounded-md mr-2"
-    >
-      Prev
-    </button>
-    <span className="mr-2">
-      Page {pageNumber} of {numPages}
-    </span>
-   
-    <button
-      onClick={() => setPageNumber(pageNumber + 1)}
-      disabled={pageNumber >= numPages}
-      className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-2 py-1 rounded-md"
-    >
-      Next
-    </button>
-  </div>
-</div>
-
-      
+          <button
+            onClick={() => setPageNumber(pageNumber + 1)}
+            disabled={pageNumber >= numPages}
+            className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-2 py-1 rounded-md"
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
 
-
 const DropdownButton = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [options, setOptions] = useState(props.data.data);
-
-
 
   // useEffect(() => {
   //   if (data) {
@@ -329,322 +367,865 @@ const DropdownButton = (props) => {
   );
 };
 
-
-
 const Employee = () => {
   // states
   const [isModalRmOpen, setIsModalRmOpen] = useState(false);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
   const [isModalGenOpen, setIsModalGenOpen] = useState(false);
-  
 
   //edit modal states
   const shiftDefault = ["start", "end"];
   const [shiftOption, setShiftOption] = useState("Select Shift"); //request option
-  const employeeData = [{name: "Oscar Maldonado", e_id: "000002" }, {name: "Jennifer Maldonado", e_id: "00001" }, {name: "Juan Pablo", e_id: "001111" }, {name: "Maria Maldonado", e_id: "003222" }, {name: "Jose Adalberto Enciso", e_id: "230114" }];
-  const EmpOptions = ["Oscar Maldonado","Jennifer Maldonado","Juan Pablo","Maria Maldonado","Jose Adalberto Enciso"];
+  const employeeData = [
+    { name: "Oscar Maldonado", e_id: "000002" },
+    { name: "Jennifer Maldonado", e_id: "00001" },
+    { name: "Juan Pablo", e_id: "001111" },
+    { name: "Maria Maldonado", e_id: "003222" },
+    { name: "Jose Adalberto Enciso", e_id: "230114" },
+  ];
+  const EmpOptions = [
+    "Oscar Maldonado",
+    "Jennifer Maldonado",
+    "Juan Pablo",
+    "Maria Maldonado",
+    "Jose Adalberto Enciso",
+  ];
   const [employee, setEmployee] = useState("Select Employee");
   const [selEmployeeData, setSelEmployeeData] = useState(""); //request option
-  const [selectedDate, setSelectedDate] = useState(null); //request option
-  const [hours,setHours] = useState(1); //request option
+  const [selectedDate, setSelectedDate] = useState(Date.now()); //request option
+  const [hours, setHours] = useState(1); //request option
   const [previewData, setPreviewData] = useState([]); //request option
   const [status, setStatus] = useState(null); //request option
   const editPreviewData = async (args) => {
-    if(selEmployeeData != "Select Employee" && selectedDate != null && shiftOption != "Select Shift"){
-    const data  = await GET_Preview(args);
-    setPreviewData(data);
+    if (
+      selEmployeeData != "Select Employee" &&
+      selectedDate != null &&
+      shiftOption != "Select Shift"
+    ) {
+      const data = await GET_Preview(args);
+      setPreviewData(data);
     }
-    }
+  };
   const submitEdit = async (args) => {
-    if(selEmployeeData != "Select Employee" && selectedDate != null && shiftOption != "Select Shift"){
-    const data = await transform_shift(args);
-    setStatus(data)
+    if (
+      selEmployeeData != "Select Employee" &&
+      selectedDate != null &&
+      shiftOption != "Select Shift"
+    ) {
+      const data = await transform_shift(args);
+      setStatus(data);
     }
-  }
+  };
 
   //remove modal states
+  const [revert, setRevert] = useState(false);
   const removePreviewData = async (args) => {
-    if(selEmployeeData != "Select Employee" && selectedDate != null){
-      const data  = await previewRemoveShift(args);
+    if (selEmployeeData != "Select Employee" && selectedDate != null) {
+      const data = await previewRemoveShift(args);
       setPreviewData(data);
-      }
-  }
+    }
+  };
   const submitRemove = async (args) => {
-    if(selEmployeeData != "Select Employee" && selectedDate != null){
+    if (selEmployeeData != "Select Employee" && selectedDate != null) {
       const data = await removeShift(args);
-      setStatus(data)
-      }
-  }
+      setStatus(data);
+    }
+  };
 
   //pdf modal states
-  const [selectedDate1, setSelectedDate1] = useState(null); //request option
-  const [selectedDate2, setSelectedDate2] = useState(null); //request option
+  const [selectedDate1, setSelectedDate1] = useState(Date.now()); //request option
+  const [selectedDate2, setSelectedDate2] = useState(Date.now()); //request option
   const [pdfBlob, setPdfBlob] = useState(null); //request option
-  const EmpDataA = [{name: "Oscar Maldonado", e_id: "000002" }, {name: "Jennifer Maldonado", e_id: "00001" }, {name: "Juan Pablo", e_id: "001111" }, {name: "Maria Maldonado", e_id: "003222" }, {name: "Jose Adalberto Enciso", e_id: "230114" }, {name: "PRINT_ALL", e_id: "PRINT_ALL" }];
-  const EmpData = ["Oscar Maldonado","Jennifer Maldonado","Juan Pablo","Maria Maldonado","Jose Adalberto Enciso", "PRINT_ALL"];  
+  const EmpDataA = [
+    { name: "Oscar Maldonado", e_id: "000002" },
+    { name: "Jennifer Maldonado", e_id: "00001" },
+    { name: "Juan Pablo", e_id: "001111" },
+    { name: "Maria Maldonado", e_id: "003222" },
+    { name: "Jose Adalberto Enciso", e_id: "230114" },
+    { name: "PRINT_ALL", e_id: "PRINT_ALL" },
+  ];
+  const EmpData = [
+    "Oscar Maldonado",
+    "Jennifer Maldonado",
+    "Juan Pablo",
+    "Maria Maldonado",
+    "Jose Adalberto Enciso",
+    "PRINT_ALL",
+  ];
   const [emp, setEmp] = useState("Select Employee");
   const [empData, setEmpData] = useState(""); //request option
   const gen_pdf = async (args) => {
-    if(selectedDate1 != null && selectedDate2 != null && emp != "Select Employee"){
+    if (
+      selectedDate1 != null &&
+      selectedDate2 != null &&
+      emp != "Select Employee"
+    ) {
       const data = await pdf_get(args);
-     setPdfBlob(data);
-      
-
+      setPdfBlob(data);
     }
-  }
+  };
 
-  useEffect(()=>{
-    if(emp != "Select Employee"){
-    const empres = EmpDataA.filter((val)=>{
-      if(emp == val.name){
-        return val;
-      }
-    })
-    setEmpData(empres[0].e_id);
-  }
+  useEffect(() => {
+    if (emp != "Select Employee") {
+      const empres = EmpDataA.filter((val) => {
+        if (emp == val.name) {
+          return val;
+        }
+      });
+      setEmpData(empres[0].e_id);
+    }
+  }, [emp]);
 
-},[emp])
+  useEffect(() => {
+    if (employee != "Select Employee") {
+      const emp = employeeData.filter((val) => {
+        if (employee == val.name) {
+          return val;
+        }
+      });
+      setSelEmployeeData(emp[0].e_id);
+    }
+  }, [employee]);
 
-  useEffect(()=>{
-    if(employee != "Select Employee"){
-    const emp = employeeData.filter((val)=>{
-      if(employee == val.name){
-        return val;
-      }
-    })
-    setSelEmployeeData(emp[0].e_id);
-  }
-},[employee])
+  // add assignment modal states
+  const [isModalAddOpen, setIsModalAddOpen] = useState(false);
+  const [rangeStart, setRangeStart] = useState(0); //request option
+  const [rangeEnd, setRangeEnd] = useState(0); //request option
+  const [selectedDate3, setSelectedDate3] = useState(Date.now()); //request option
 
+  //edit assignment modal states
+  const [isModalEditAssignOpen, setIsModalEditAssignOpen] = useState(false);
 
+  //remove assignment modal states
+  const [isModalRmAssignOpen, setIsModalRmAssignOpen] = useState(false);
+
+  //view assignment modal states
+  const [isModalViewAssignOpen, setIsModalViewAssignOpen] = useState(false);
 
   const handleModalOpen = (val) => {
-    if(val == "edit"){
+    if (val == "viewAssign") {
+      setIsModalViewAssignOpen(true);
+    }
+    if (val == "rmAssign") {
+      setIsModalRmAssignOpen(true);
+    }
+    if (val == "editAssign") {
+      setIsModalEditAssignOpen(true);
+    }
+    if (val == "add") {
+      setIsModalAddOpen(true);
+    }
+    if (val == "edit") {
       setIsModalEditOpen(true);
     }
-    if(val == "rm"){
+    if (val == "rm") {
       setIsModalRmOpen(true);
     }
-    if(val == "gen"){
+    if (val == "gen") {
       setIsModalGenOpen(true);
     }
   };
 
   const handleModalClose = (val) => {
-    if(val == "edit"){
+    if (val == "viewAssign") {
+      setIsModalViewAssignOpen(false);
+    }
+    if (val == "rmAssign") {
+      setIsModalRmAssignOpen(false);
+    }
+    if (val == "editAssign") {
+      setIsModalEditAssignOpen(false);
+    }
+
+    if (val == "add") {
+      setIsModalAddOpen(false);
+    }
+    if (val == "edit") {
       setStatus(null);
       setEmployee("Select Employee");
       setSelEmployeeData("");
       setShiftOption("Select Shift");
-      setPreviewData([])
-      setSelectedDate(null);
+      setPreviewData([]);
+      setSelectedDate(Date.now());
       setHours(1);
       setIsModalEditOpen(false);
     }
-    if(val == "rm"){
-      setStatus(null)
+    if (val == "rm") {
+      setRevert(false);
+      setStatus(null);
       setEmployee("Select Employee");
       setSelEmployeeData("");
       setShiftOption("Select Shift");
-      setPreviewData([])
-      setSelectedDate(null);
+      setPreviewData([]);
+      setSelectedDate(Date.now());
       setIsModalRmOpen(false);
     }
-    if(val == "gen"){
+    if (val == "gen") {
       setEmp("Select Employee");
       setPdfBlob(null);
-      setSelectedDate1(null);
-      setSelectedDate2(null);
+      setSelectedDate1(Date.now());
+      setSelectedDate2(Date.now());
       setIsModalGenOpen(false);
     }
   };
   // component init
   return (
     <>
-    <CardGrid>
-      <Card onClick={()=>handleModalOpen("edit")}>
-        <h2 className="text-black mb-3">Edit Employee Shift</h2>
-        <SubComponent>
-        <h3 className="text-gray-800/50">Utility</h3>
-        <p className="text-gray-800/50">Edit start or end shift time for a given employee</p>
-        </SubComponent>
-      </Card>
-      <Card onClick={()=>handleModalOpen("rm")}>
-        <h2 className="text-black mb-3">Remove Employee Shift</h2>
-        <SubComponent>
-          <h3 className="text-gray-800/50">Utility</h3>
-          <p className="text-gray-800/50">Remove employee shift day with a given id and date</p>
-        </SubComponent>
-      </Card>
-      <Card onClick={()=>handleModalOpen("gen")}>
-        <h2 className="text-black mb-3">Generate Employee Work Times</h2>
-        <SubComponent>
-          <h3 className="text-gray-800/50">Utility</h3>
-          <p className="text-gray-800/50">Generate pdf files for employess</p>
-        </SubComponent>
-      </Card>
-    
-    </CardGrid>
-   
-    <div className="hidden lg:block fixed bottom-0 left-0 w-full bg-red-500 py-2">
-  <div className="max-w-7xl mx-auto px-4">
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-      <AlertCard title="Employee Alert" message="Jennifer missed today." />
-      <AlertCard title="Shift Alert" message="Oscar changed his end shift" />
-      <AlertCard title="Generation Alert" message="Generated Time Report for Oscar" />
-    </div>
-  </div>
-</div>
-  
-      {/* edit modal */}
-      {isModalEditOpen && (
-  <>
-    <ModalBackground onClick={()=>handleModalClose("edit")} />
-    <ModalContainer>
-      <ModalHeader className="sticky top-0 z-10 bg-white">
-        <ModalTitle className="text-black">Edit Utility</ModalTitle>
-        <ModalCloseButton onClick={()=>handleModalClose("edit")}>
-          <FaTimes className="w-5 h-5 mr-2" />
-        </ModalCloseButton>
-      </ModalHeader>
-      {status == null ? (
-        <>
-          <div className="p-4 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-b-2 border-black/20">
-            <div>
-              <p className="text-black">Select Shift Options</p>
-              <DropdownButton setData={setShiftOption} dataValue={shiftOption} data={{data: shiftDefault}} />
-            </div>
-            <div>
-              <p className="text-black">Select Employee</p>
-              <DropdownButton setData={setEmployee} dataValue={employee} data={{data: EmpOptions}}/>
-            </div>
-            <div>
-              <p className="text-black">Select Date</p>
-              <Datepicker selected={selectedDate} setSelected={setSelectedDate}/>
-            </div>
-            <div>
-              <p className="text-black">Enter Change In Hours</p>
-              <input className="text-black w-full" type="number" value={hours} onChange={(e)=>{setHours(e.target.value)}} placeholder="Enter Hours" min={0} max={20}/>
-            </div>
-          </div>
-          <div className="text-black flex justify-center items-center text-3xl mt-20">
-            <div className="w-auto h-auto text-center opacity-50">
-              {previewData.length > 0 ? (
-                <div>
-                  {employee}
-                  {previewData.map(obj=>{if(obj.SHIFT_CHANGE == true){return <div key={obj.SHIFT_DATE} className="bg-red-500/80 rounded-lg">{shiftOption == "end" ? obj.SHIFT_END : obj.SHIFT_START}</div>}else{return <div key={obj.SHIFT_DATE} >{shiftOption == "end" ? obj.SHIFT_END : obj.SHIFT_START}</div>}})}
-                </div>
-              ) : (
-                <div> Loading Preview...</div>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 md:mt-12 lg:mt-16">
-            <button className="w-full sm:w-auto rounded-lg text-black border border-3 bg-zuma-green/80 px-4 py-2 sm:mr-4 mb-4 sm:mb-0" onClick={()=>{editPreviewData({e_id: selEmployeeData, date: selectedDate, shiftOption: shiftOption, hours: hours})}}>Preview Change</button>    
-            <button className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2" onClick={()=>{submitEdit({e_id: selEmployeeData, date: selectedDate, shiftOption: shiftOption, hours: hours})}}>Change Shift Entry</button>
-          </div>
-        </>
-      ) : (
-        <div className="text-gray-900 font-bold"> Entry Changed!</div>) }
-
-    </ModalContainer>
-  </>
-)}
-      {/* rm modal */}
-      {isModalRmOpen && (
-    <>
-      <ModalBackground onClick={()=>handleModalClose("rm")} />
-      <ModalContainer className="sm:w-11/12 md:w-5/6 lg:w-2/3">
-        <ModalHeader className="sticky top-0 z-10 bg-white">
-          <ModalTitle className="text-black">Remove Shift Utility</ModalTitle>
-          <ModalCloseButton onClick={()=>handleModalClose("rm")}>
-            <FaTimes className="w-5 h-5 mr-2" />
-          </ModalCloseButton>
-        </ModalHeader>
-        <>
-          {status == null ? (
-            <>
-              <div className="p-4 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 border border-b-2 border-black/20">
-                <div>
-                  <p className="text-black">Select Employee</p>
-                  <DropdownButton setData={setEmployee} dataValue={employee} data={{data: EmpOptions}}/>
-                </div>
-                <div>
-                  <p className="text-black">Select Date</p>
-                  <Datepicker selected={selectedDate} setSelected={setSelectedDate}/>
-                </div>
-              </div>
-              <div className="text-black flex justify-center items-center text-3xl mt-20">
-                <div className="w-auto h-auto text-center opacity-50">
-                  {previewData.length > 0 ? (
-                    <div>
-                      {employee}
-                      {previewData.map(obj=>{if(obj.SHIFT_CHANGE == true){return <div key={obj.SHIFT_DATE} className="bg-red-500/80 rounded-lg">{obj.SHIFT_DATE}</div>}else{return <div key={obj.SHIFT_DATE} >{obj.SHIFT_DATE}</div>}})}
-                    </div>
-                  ) : (
-                    <div> Loading Preview...</div>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
-                <button className="w-full sm:w-auto rounded-lg text-black border border-3 bg-zuma-green/80 px-4 py-2 sm:mr-4 mb-4 sm:mb-0" onClick={()=>{removePreviewData({e_id: selEmployeeData, date: selectedDate, shiftOption: shiftOption, hours: hours})}}>Preview Change</button>    
-                <button className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2" onClick={()=>{submitRemove({e_id: selEmployeeData, date: selectedDate, shiftOption: shiftOption, hours: hours})}}>Change Shift Entry</button>
-              </div>
-            </>
-          ) : (
-            <div className="text-gray-900 font-bold"> Entry Removed!</div>
-          )}
-        </>
-      </ModalContainer>
-    </>
-  )}
-
-      {/* gen modal */}
-      {isModalGenOpen && (
-    <>
-      <ModalBackground onClick={()=>handleModalClose("gen")} />
-      <ModalContainer>
-        <ModalHeader className="sticky top-0 z-10 bg-white">
-          <ModalTitle className="text-black">Generate Utility</ModalTitle>
-          <ModalCloseButton onClick={()=>handleModalClose("gen")}>
-          <FaTimes className="w-5 h-5 mr-2" />
-          </ModalCloseButton>
-        </ModalHeader>
-        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border border-b-2 border-black/20">
-       
-          <div className="mb-4 md:mb-0">
-            <p className="text-black">Select Employee</p>
-            <DropdownButton setData={setEmp} dataValue={emp} data={{data: EmpData}}/>
-          </div>
-          <div className="mb-4 md:mb-0">
-            <p className="text-black">Select Date</p>
-            <Datepicker selected={selectedDate1} setSelected={setSelectedDate1}/>
-          </div>
-          <div>
-            <p className="text-black">Select Date</p>
-            <Datepicker selected={selectedDate2} setSelected={setSelectedDate2}/>
+      <CardGrid>
+        <Card onClick={() => handleModalOpen("edit")}>
+          <h2 className="text-black mb-3">Edit Employee Shift</h2>
+          <SubComponent>
+            <h3 className="text-gray-800/50">Utility</h3>
+            <p className="text-gray-800/50">
+              Edit start or end shift time for a given employee
+            </p>
+          </SubComponent>
+        </Card>
+        <Card onClick={() => handleModalOpen("rm")}>
+          <h2 className="text-black mb-3">Remove Employee Shift</h2>
+          <SubComponent>
+            <h3 className="text-gray-800/50">Utility</h3>
+            <p className="text-gray-800/50">
+              Remove employee shift day with a given id and date
+            </p>
+          </SubComponent>
+        </Card>
+        <Card onClick={() => handleModalOpen("gen")}>
+          <h2 className="text-black mb-3">Generate Employee Work Times</h2>
+          <SubComponent>
+            <h3 className="text-gray-800/50">Utility</h3>
+            <p className="text-gray-800/50">Generate pdf files for employess</p>
+          </SubComponent>
+        </Card>
+        <Card onClick={() => handleModalOpen("add")}>
+          <h2 className="text-black mb-3">Add Employee Assignment</h2>
+          <SubComponent>
+            <h3 className="text-gray-800/50">Utility</h3>
+            <p className="text-gray-800/50">
+              Add employee assignment to keep track of orders
+            </p>
+          </SubComponent>
+        </Card>
+        <Card onClick={() => handleModalOpen("editAssign")}>
+          <h2 className="text-black mb-3">Edit Employee Assignment</h2>
+          <SubComponent>
+            <h3 className="text-gray-800/50">Utility</h3>
+            <p className="text-gray-800/50">
+              Edit Employee assignment or update certain parameters
+            </p>
+          </SubComponent>
+        </Card>
+        <Card onClick={() => handleModalOpen("rmAssign")}>
+          <h2 className="text-black mb-3">Remove Employee Assignment</h2>
+          <SubComponent>
+            <h3 className="text-gray-800/50">Utility</h3>
+            <p className="text-gray-800/50">
+              Remove employee assignment entry given a date
+            </p>
+          </SubComponent>
+        </Card>
+        <Card onClick={() => handleModalOpen("viewAssign")}>
+          <h2 className="text-black mb-3">View Employee Assignments</h2>
+          <SubComponent>
+            <h3 className="text-gray-800/50">Utility</h3>
+            <p className="text-gray-800/50">
+              View given employee assignment within a range
+            </p>
+          </SubComponent>
+        </Card>
+      </CardGrid>
+      <div className="hidden lg:block fixed bottom-0 left-0 w-full bg-red-500 py-2">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <AlertCard
+              title="Employee Alert"
+              message="Jennifer missed today."
+            />
+            <AlertCard
+              title="Shift Alert"
+              message="Oscar changed his end shift"
+            />
+            <AlertCard
+              title="Generation Alert"
+              message="Generated Time Report for Oscar"
+            />
           </div>
         </div>
-        
-       <PdfViewer fileBlob={pdfBlob} />
-       <div className="flex justify-center items-center mt-8 md:mt-20 mb-8 md:mb-20">
-          <button 
-            className="bg-zuma-green text-white py-2 px-4 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-zuma-green-dark focus:ring-opacity-50"
-            onClick={() => {gen_pdf({e_id: empData, date1: selectedDate1, date2: selectedDate2})}}
-          >
-            Generate PDF
-          </button>
-       </div>
-        
-      </ModalContainer>
+      </div>
+      {/* edit modal */}
+      {isModalEditOpen && (
+        <>
+          <ModalBackground onClick={() => handleModalClose("edit")} />
+          <ModalContainer>
+            <ModalHeader className="sticky top-0 z-10 bg-white">
+              <ModalTitle className="text-black">Edit Utility</ModalTitle>
+              <ModalCloseButton onClick={() => handleModalClose("edit")}>
+                <FaTimes className="w-5 h-5 mr-2" />
+              </ModalCloseButton>
+            </ModalHeader>
+            {status == null ? (
+              <>
+                <div className="p-4 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-b-2 border-black/20">
+                  <div>
+                    <p className="text-black">Select Shift Options</p>
+                    <DropdownButton
+                      setData={setShiftOption}
+                      dataValue={shiftOption}
+                      data={{ data: shiftDefault }}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-black">Select Employee</p>
+                    <DropdownButton
+                      setData={setEmployee}
+                      dataValue={employee}
+                      data={{ data: EmpOptions }}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-black">Select Date</p>
+                    <Datepicker
+                      selected={selectedDate}
+                      setSelected={setSelectedDate}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-black">Enter Change In Hours</p>
+                    <input
+                      className="text-black w-full rounded-lg border border-black/20 p-2"
+                      type="number"
+                      value={hours}
+                      onChange={(e) => {
+                        setHours(e.target.value);
+                      }}
+                      placeholder="Enter Hours"
+                      min={0}
+                      max={20}
+                    />
+                  </div>
+                </div>
+                <div className="text-black flex justify-center items-center text-3xl mt-20">
+                  <div className="w-auto h-auto text-center opacity-50">
+                    {previewData.length > 0 ? (
+                      <div>
+                        {employee}
+                        {previewData.map((obj) => {
+                          if (obj.SHIFT_CHANGE == true) {
+                            return (
+                              <div
+                                key={obj.SHIFT_DATE}
+                                className="bg-red-500/80 rounded-lg"
+                              >
+                                {shiftOption == "end"
+                                  ? obj.SHIFT_END
+                                  : obj.SHIFT_START}
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <div key={obj.SHIFT_DATE}>
+                                {shiftOption == "end"
+                                  ? obj.SHIFT_END
+                                  : obj.SHIFT_START}
+                              </div>
+                            );
+                          }
+                        })}
+                      </div>
+                    ) : (
+                      <div> Loading Preview...</div>
+                    )}
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 md:mt-12 lg:mt-16">
+                  <button
+                    className="w-full sm:w-auto rounded-lg text-black border border-3 bg-zuma-green/80 px-4 py-2 sm:mr-4 mb-4 sm:mb-0"
+                    onClick={() => {
+                      editPreviewData({
+                        e_id: selEmployeeData,
+                        date: selectedDate,
+                        shiftOption: shiftOption,
+                        hours: hours,
+                      });
+                    }}
+                  >
+                    Preview Change
+                  </button>
+                  <button
+                    className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
+                    onClick={() => {
+                      submitEdit({
+                        e_id: selEmployeeData,
+                        date: selectedDate,
+                        shiftOption: shiftOption,
+                        hours: hours,
+                      });
+                    }}
+                  >
+                    Change Shift Entry
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="text-gray-900 font-bold"> Entry Changed!</div>
+            )}
+          </ModalContainer>
+        </>
+      )}
+      {/* rm modal */}
+      {isModalRmOpen && (
+        <>
+          <ModalBackground onClick={() => handleModalClose("rm")} />
+          <ModalContainer className="sm:w-11/12 md:w-5/6 lg:w-2/3">
+            <ModalHeader className="sticky top-0 z-10 bg-white">
+              <ModalTitle className="text-black">
+                Remove Shift Utility
+              </ModalTitle>
+              <ModalCloseButton onClick={() => handleModalClose("rm")}>
+                <FaTimes className="w-5 h-5 mr-2" />
+              </ModalCloseButton>
+            </ModalHeader>
+            <>
+              {status == null ? (
+                <>
+                  <div className="p-4 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 border border-b-2 border-black/20">
+                    <div>
+                      <p className="text-black">Select Employee</p>
+                      <DropdownButton
+                        setData={setEmployee}
+                        dataValue={employee}
+                        data={{ data: EmpOptions }}
+                      />
+                    </div>
+                    <div>
+                      <p className="text-black">Select Date</p>
+                      <Datepicker
+                        selected={selectedDate}
+                        setSelected={setSelectedDate}
+                      />
+                    </div>
+                  </div>
+                  <div className="text-black flex justify-center items-center text-3xl mt-20">
+                    <div className="w-auto h-auto text-center opacity-50">
+                      {previewData.length > 0 ? (
+                        <div>
+                          {employee}
+                          {previewData.map((obj) => {
+                            if (
+                              obj.SHIFT_CHANGE == true &&
+                              obj.SHIFT_DATE == "Called Off"
+                            ) {
+                              return (
+                                <div className="flex items-center">
+                                  <div
+                                    key={obj.SHIFT_DATE}
+                                    className="bg-red-500/80 rounded-lg mr-2 py-1 px-2"
+                                  >
+                                    {obj.SHIFT_DATE}
+                                  </div>
+                                  <Slider value={revert} onChange={setRevert} />
+                                  <div className="text-lg">
+                                    Revert Shift Removal
+                                  </div>
+                                </div>
+                              );
+                            } else if (obj.SHIFT_CHANGE == true) {
+                              return (
+                                <div
+                                  key={obj.SHIFT_DATE}
+                                  className="bg-red-500/80 rounded-lg"
+                                >
+                                  {obj.SHIFT_DATE}
+                                </div>
+                              );
+                            } else {
+                              return (
+                                <div key={obj.SHIFT_DATE}>{obj.SHIFT_DATE}</div>
+                              );
+                            }
+                          })}
+                        </div>
+                      ) : (
+                        <div> Loading Preview...</div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
+                    {!revert && (
+                      <button
+                        className="w-full sm:w-auto rounded-lg text-black border border-3 bg-zuma-green/80 px-4 py-2 sm:mr-4 mb-4 sm:mb-0"
+                        onClick={() => {
+                          removePreviewData({
+                            e_id: selEmployeeData,
+                            date: selectedDate,
+                            shiftOption: shiftOption,
+                            hours: hours,
+                          });
+                        }}
+                      >
+                        Preview Change
+                      </button>
+                    )}
+                    <button
+                      className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
+                      onClick={() => {
+                        submitRemove({
+                          e_id: selEmployeeData,
+                          date: selectedDate,
+                          shiftOption: shiftOption,
+                          hours: hours,
+                          revert: revert,
+                        });
+                      }}
+                    >
+                      {revert ? "Revert Modified Entry" : "Remove Shift Entry"}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-gray-900 font-bold">
+                  {" "}
+                  {revert
+                    ? "Reverted Removal Of Entry"
+                    : "Removed Shift Entry!"}
+                </div>
+              )}
+            </>
+          </ModalContainer>
+        </>
+      )}
+      {/* gen modal */}
+      {isModalGenOpen && (
+        <>
+          <ModalBackground onClick={() => handleModalClose("gen")} />
+          <ModalContainer>
+            <ModalHeader className="sticky top-0 z-10 bg-white">
+              <ModalTitle className="text-black">Generate Utility</ModalTitle>
+              <ModalCloseButton onClick={() => handleModalClose("gen")}>
+                <FaTimes className="w-5 h-5 mr-2" />
+              </ModalCloseButton>
+            </ModalHeader>
+            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border border-b-2 border-black/20">
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Employee</p>
+                <DropdownButton
+                  setData={setEmp}
+                  dataValue={emp}
+                  data={{ data: EmpData }}
+                />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Start Date</p>
+                <Datepicker
+                  selected={selectedDate1}
+                  setSelected={setSelectedDate1}
+                />
+              </div>
+              <div>
+                <p className="text-black">Select End Date</p>
+                <Datepicker
+                  selected={selectedDate2}
+                  setSelected={setSelectedDate2}
+                />
+              </div>
+            </div>
+
+            <PdfViewer fileBlob={pdfBlob} />
+            <div className="flex justify-center items-center mt-8 md:mt-20 mb-8 md:mb-20">
+              <button
+                className="bg-zuma-green text-white py-2 px-4 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-zuma-green-dark focus:ring-opacity-50"
+                onClick={() => {
+                  gen_pdf({
+                    e_id: empData,
+                    date1: selectedDate1,
+                    date2: selectedDate2,
+                  });
+                }}
+              >
+                Generate PDF
+              </button>
+            </div>
+          </ModalContainer>
+        </>
+      )}
+      {/* add assignment modal */}
+      {isModalAddOpen && (
+        <>
+          <ModalBackground onClick={() => handleModalClose("add")} />
+          <ModalContainer>
+            <ModalHeader className="sticky top-0 z-10 bg-white">
+              <ModalTitle className="text-black">Assignment Utility</ModalTitle>
+              <ModalCloseButton onClick={() => handleModalClose("add")}>
+                <FaTimes className="w-5 h-5 mr-2" />
+              </ModalCloseButton>
+            </ModalHeader>
+            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-b-2 border-black/20">
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Employee</p>
+                <DropdownButton
+                  setData={setEmp}
+                  dataValue={emp}
+                  data={{ data: EmpData }}
+                />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Date</p>
+                <Datepicker
+                  selected={selectedDate3}
+                  setSelected={setSelectedDate3}
+                />
+              </div>
+              <div>
+                <label className="text-black">Enter Start Range</label>
+                <input
+                  type={"number"}
+                  className="text-black rounded-lg border border-black/20 p-2"
+                  value={rangeStart}
+                  onChange={(e) => {
+                    setRangeStart(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <label className="text-black">Enter End Range</label>
+                <input
+                  type={"number"}
+                  className="text-black rounded-lg border border-black/20 p-2"
+                  value={rangeEnd}
+                  onChange={(e) => {
+                    setRangeEnd(e.target.value);
+                  }}
+                />
+              </div>
+            </div>
+            {/* preview data useEffect*/}
+
+            <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
+              <button
+                className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
+                onClick={() => {
+                  submitRemove({
+                    e_id: selEmployeeData,
+                    date: selectedDate,
+                    shiftOption: shiftOption,
+                    hours: hours,
+                  });
+                }}
+              >
+                Add Assignment
+              </button>
+            </div>
+          </ModalContainer>
+        </>
+      )}
+      {/* edit add assignment modal */}
+      {isModalEditAssignOpen && (
+        <>
+          <ModalBackground onClick={() => handleModalClose("editAssign")} />
+          <ModalContainer>
+            <ModalHeader className="sticky top-0 z-10 bg-white">
+              <ModalTitle className="text-black">
+                Edit Assignment Utility
+              </ModalTitle>
+              <ModalCloseButton onClick={() => handleModalClose("editAssign")}>
+                <FaTimes className="w-5 h-5 mr-2" />
+              </ModalCloseButton>
+            </ModalHeader>
+            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-b-2 border-black/20">
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Employee</p>
+                <DropdownButton
+                  setData={setEmp}
+                  dataValue={emp}
+                  data={{ data: EmpData }}
+                />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Range Option</p>
+                <DropdownButton
+                  setData={setEmp}
+                  dataValue={emp}
+                  data={{ data: EmpData }}
+                />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Date</p>
+                <Datepicker
+                  selected={selectedDate3}
+                  setSelected={setSelectedDate3}
+                />
+              </div>
+              <div>
+                <label className="text-black">Enter New Range</label>
+                <input
+                  type={"number"}
+                  className="text-black rounded-lg border border-black/20 p-2"
+                  value={rangeStart}
+                  onChange={(e) => {
+                    setRangeStart(e.target.value);
+                  }}
+                />
+              </div>
+            </div>
+            {/* preview data useEffect*/}
+
+            <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
+              <button
+                className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
+                onClick={() => {
+                  submitRemove({
+                    e_id: selEmployeeData,
+                    date: selectedDate,
+                    shiftOption: shiftOption,
+                    hours: hours,
+                  });
+                }}
+              >
+                Change Shift Entry
+              </button>
+            </div>
+          </ModalContainer>
+        </>
+      )}
+      {/* remove assignment modal */}
+      {isModalRmAssignOpen && (
+        <>
+          <ModalBackground onClick={() => handleModalClose("rmAssign")} />
+          <ModalContainer>
+            <ModalHeader className="sticky top-0 z-10 bg-white">
+              <ModalTitle className="text-black">
+                Remove Assignment Utility
+              </ModalTitle>
+              <ModalCloseButton onClick={() => handleModalClose("rmAssign")}>
+                <FaTimes className="w-5 h-5 mr-2" />
+              </ModalCloseButton>
+            </ModalHeader>
+            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-b-2 border-black/20">
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Employee</p>
+                <DropdownButton
+                  setData={setEmp}
+                  dataValue={emp}
+                  data={{ data: EmpData }}
+                />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Range Option</p>
+                <DropdownButton
+                  setData={setEmp}
+                  dataValue={emp}
+                  data={{ data: EmpData }}
+                />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Date</p>
+                <Datepicker
+                  selected={selectedDate3}
+                  setSelected={setSelectedDate3}
+                />
+              </div>
+              <div>
+                <label className="text-black">Enter New Range</label>
+                <input
+                  type={"number"}
+                  className="text-black  rounded-lg border border-black/20 p-2"
+                  value={rangeStart}
+                  onChange={(e) => {
+                    setRangeStart(e.target.value);
+                  }}
+                />
+              </div>
+            </div>
+            {/* preview data useEffect*/}
+
+            <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
+              <button
+                className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
+                onClick={() => {
+                  submitRemove({
+                    e_id: selEmployeeData,
+                    date: selectedDate,
+                    shiftOption: shiftOption,
+                    hours: hours,
+                  });
+                }}
+              >
+                Change Shift Entry
+              </button>
+            </div>
+          </ModalContainer>
+        </>
+      )}
+      {/* view assignment modal */}
+      {isModalViewAssignOpen && (
+        <>
+          <ModalBackground onClick={() => handleModalClose("viewAssign")} />
+          <ModalContainer>
+            <ModalHeader className="sticky top-0 z-10 bg-white">
+              <ModalTitle className="text-black">
+                View Assignment Utility
+              </ModalTitle>
+              <ModalCloseButton onClick={() => handleModalClose("viewAssign")}>
+                <FaTimes className="w-5 h-5 mr-2" />
+              </ModalCloseButton>
+            </ModalHeader>
+            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-b-2 border-black/20">
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Employee</p>
+                <DropdownButton
+                  setData={setEmp}
+                  dataValue={emp}
+                  data={{ data: EmpData }}
+                />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Range Option</p>
+                <DropdownButton
+                  setData={setEmp}
+                  dataValue={emp}
+                  data={{ data: EmpData }}
+                />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <p className="text-black">Select Date</p>
+                <Datepicker
+                  selected={selectedDate3}
+                  setSelected={setSelectedDate3}
+                />
+              </div>
+              <div>
+                <label className="text-black">Enter New Range</label>
+                <input
+                  type={"number"}
+                  className="text-black rounded-lg border border-black/20 p-2"
+                  value={rangeStart}
+                  onChange={(e) => {
+                    setRangeStart(e.target.value);
+                  }}
+                />
+              </div>
+            </div>
+            {/* preview data useEffect*/}
+
+            <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
+              <button
+                className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
+                onClick={() => {
+                  submitRemove({
+                    e_id: selEmployeeData,
+                    date: selectedDate,
+                    shiftOption: shiftOption,
+                    hours: hours,
+                  });
+                }}
+              >
+                Change Shift Entry
+              </button>
+            </div>
+          </ModalContainer>
+        </>
+      )}
     </>
-)}
-
-    
-
-
-    
-     </>
   );
 };
 
