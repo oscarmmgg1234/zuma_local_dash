@@ -595,8 +595,11 @@ const Employee = () => {
     }
 
     if (val == "add") {
+      setEmp("Select Employee");
+      setSelEmployeeData("");
       setIsModalAddOpen(false);
       setPreviewDataAdd({});
+      setSelectedDate3(Date.now());
       serResponse(null);
     }
     if (val == "edit") {
