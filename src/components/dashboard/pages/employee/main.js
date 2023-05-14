@@ -121,7 +121,7 @@ const Add_Assigment = async (args) => {
     body: data,
   };
   const response = await fetch(
-    `http://localhost:3001/EmployeeResourcesAPI/addAssignment`,
+    `http:///35.163.109.26:3000/EmployeeResourcesAPI/addAssignment`,
     options
   );
 
