@@ -1082,7 +1082,7 @@ const Employee = () => {
                 <button
                   className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
                   onClick={() => {
-                    Add_Assigment({
+                    submitAdd({
                       e_id: emp,
                       date: selectedDate3,
                       rangeStart: rangeStart,
