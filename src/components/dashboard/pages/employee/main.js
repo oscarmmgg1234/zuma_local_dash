@@ -108,8 +108,8 @@ const local_data = {
 const Add_Assigment = async (args) => {
   const data = JSON.stringify({
     e_id: args.e_id,
-    range_start: args.range_start,
-    range_end: args.range_end,
+    range_start: args.rangeStart,
+    range_end: args.rangeEnd,
     date: args.date,
   });
   const options = {
@@ -121,9 +121,10 @@ const Add_Assigment = async (args) => {
     body: data,
   };
   const response = await fetch(
-    `http://35.163.109.26:3000/EmployeeResourcesAPI/addAssignment`,
+    `http://localhost:3001/EmployeeResourcesAPI/addAssignment`,
     options
   );
+
   return await response.json();
 };
 
@@ -595,6 +596,8 @@ const Employee = () => {
     }
 
     if (val == "add") {
+      setRangeStart(0);
+      setRangeEnd(0);
       setEmp("Select Employee");
       setSelEmployeeData("");
       setIsModalAddOpen(false);
@@ -1014,90 +1017,100 @@ const Employee = () => {
         </>
       )}
       {/* add assignment modal */}
-      {isModalAddOpen &&
-        (response == null ? (
-          <>
-            <ModalBackground onClick={() => handleModalClose("add")} />
-            <ModalContainer>
-              <ModalHeader className="sticky top-0 z-10 bg-white">
-                <ModalTitle className="text-black">
-                  Assignment Utility
-                </ModalTitle>
-                <ModalCloseButton onClick={() => handleModalClose("add")}>
-                  <FaTimes className="w-5 h-5 mr-2" />
-                </ModalCloseButton>
-              </ModalHeader>
-              <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-b-2 border-black/20">
-                <div className="mb-4 md:mb-0">
-                  <p className="text-black">Select Employee</p>
-                  <DropdownButton
-                    setData={setEmp}
-                    dataValue={emp}
-                    data={{ data: local_data.emps }}
-                  />
-                </div>
-                <div className="mb-4 md:mb-0">
-                  <p className="text-black">Select Date</p>
-                  <Datepicker
-                    selected={selectedDate3}
-                    setSelected={setSelectedDate3}
-                  />
-                </div>
-                <div>
-                  <label className="text-black">Enter Start Range</label>
-                  <input
-                    type={"number"}
-                    className="text-black rounded-lg border border-black/20 p-2"
-                    value={rangeStart}
-                    onChange={(e) => {
-                      setRangeStart(e.target.value);
-                    }}
-                  />
-                </div>
-                <div>
-                  <label className="text-black">Enter End Range</label>
-                  <input
-                    type={"number"}
-                    className="text-black rounded-lg border border-black/20 p-2"
-                    value={rangeEnd}
-                    onChange={(e) => {
-                      setRangeEnd(e.target.value);
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="text-black flex justify-center items-center text-3xl mt-20">
-                <div className="w-auto h-auto text-center opacity-50">
-                  <div className="text-black">
-                    Assignment Object: {"{ "}Employee: {previewDataAdd.employee}
-                    , Range: {previewDataAdd.range[0]} to{" "}
-                    {previewDataAdd.range[1]}, Total Orders:{" "}
-                    {previewDataAdd.total}
-                    {" }"}
+      {isModalAddOpen && (
+        <>
+          <ModalBackground onClick={() => handleModalClose("add")} />
+          <ModalContainer>
+            <ModalHeader className="sticky top-0 z-10 bg-white">
+              <ModalTitle className="text-black">Assignment Utility</ModalTitle>
+              <ModalCloseButton onClick={() => handleModalClose("add")}>
+                <FaTimes className="w-5 h-5 mr-2" />
+              </ModalCloseButton>
+            </ModalHeader>
+            {response == null ? (
+              <>
+                <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-b-2 border-black/20">
+                  <div className="mb-4 md:mb-0">
+                    <p className="text-black">Select Employee</p>
+                    <DropdownButton
+                      setData={setEmp}
+                      dataValue={emp}
+                      data={{ data: local_data.emps }}
+                    />
+                  </div>
+                  <div className="mb-4 md:mb-0">
+                    <p className="text-black">Select Date</p>
+                    <Datepicker
+                      selected={selectedDate3}
+                      setSelected={setSelectedDate3}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-black">Enter Start Range</label>
+                    <input
+                      type={"number"}
+                      className="text-black rounded-lg border border-black/20 p-2"
+                      value={rangeStart}
+                      onChange={(e) => {
+                        setRangeStart(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-black">Enter End Range</label>
+                    <input
+                      type={"number"}
+                      className="text-black rounded-lg border border-black/20 p-2"
+                      value={rangeEnd}
+                      onChange={(e) => {
+                        setRangeEnd(e.target.value);
+                      }}
+                    />
                   </div>
                 </div>
-              </div>
+                <div className="text-black flex justify-center items-center text-3xl mt-20 mb-5">
+                  <div className="w-auto h-auto text-center opacity-50">
+                    <div className="text-black">
+                      <div className="bg-zuma-green py-2 px-2 rounded-lg">
+                        Employee: {previewDataAdd.employee},
+                      </div>
+                      <div className="bg-zuma-green/70 py-2 px-2 rounded-lg">
+                        Range: {previewDataAdd.range[0]} to{" "}
+                        {previewDataAdd.range[1]}
+                      </div>
+                      <div className="bg-zuma-green/50 py-2 px-2 rounded-lg">
+                        Total Orders: {previewDataAdd.total}
+                      </div>
+                      <div className="bg-zuma-green/50 py-2 px-2 rounded-lg">
+                        Entry Date:{" "}
+                        {new Date(previewDataAdd.date).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-              <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
-                <button
-                  className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
-                  onClick={() => {
-                    submitAdd({
-                      e_id: emp,
-                      date: selectedDate3,
-                      rangeStart: rangeStart,
-                      rangeEnd: rangeEnd,
-                    });
-                  }}
-                >
-                  Add Assignment
-                </button>
-              </div>
-            </ModalContainer>
-          </>
-        ) : (
-          <div> Assignment added for the employee!</div>
-        ))}
+                <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
+                  <button
+                    className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2 mb-4"
+                    onClick={() => {
+                      submitAdd({
+                        e_id: empData,
+                        date: selectedDate3,
+                        rangeStart,
+                        rangeEnd,
+                      });
+                    }}
+                  >
+                    Add Assignment
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div> Assignment added for the employee!</div>
+            )}
+          </ModalContainer>
+        </>
+      )}
       {/* edit add assignment modal */}
       {isModalEditAssignOpen && (
         <>
