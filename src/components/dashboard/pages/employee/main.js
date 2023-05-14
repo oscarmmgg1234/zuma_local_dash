@@ -73,28 +73,60 @@ const SubComponent = tw.div`
   p-4
 `;
 
-function Slider({ value, onChange }) {
-  const handleToggle = () => {
-    onChange(!value);
+const local_data = {
+  gen_emp_all: [
+    { name: "Oscar Maldonado", e_id: "000002" },
+    { name: "Jennifer Maldonado", e_id: "00001" },
+    { name: "Juan Pablo", e_id: "001111" },
+    { name: "Maria Maldonado", e_id: "003222" },
+    { name: "Jose Adalberto Enciso", e_id: "230114" },
+    { name: "PRINT_ALL", e_id: "PRINT_ALL" },
+  ],
+  emp_data: [
+    { name: "Oscar Maldonado", e_id: "000002" },
+    { name: "Jennifer Maldonado", e_id: "00001" },
+    { name: "Juan Pablo", e_id: "001111" },
+    { name: "Maria Maldonado", e_id: "003222" },
+    { name: "Jose Adalberto Enciso", e_id: "230114" },
+  ],
+  emps: [
+    "Oscar Maldonado",
+    "Jennifer Maldonado",
+    "Juan Pablo",
+    "Maria Maldonado",
+    "Jose Adalberto Enciso",
+  ],
+  gen_emps: [
+    "Oscar Maldonado",
+    "Jennifer Maldonado",
+    "Juan Pablo",
+    "Maria Maldonado",
+    "Jose Adalberto Enciso",
+    "PRINT_ALL",
+  ],
+};
+const Add_Assigment = async (args) => {
+  const data = JSON.stringify({
+    e_id: args.e_id,
+    range_start: args.range_start,
+    range_end: args.range_end,
+    date: args.date,
+  });
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Content-Length": data.length,
+    },
+    body: data,
   };
-
-  return (
-    <div className="relative inline-block w-10 mr-2 align-middle select-none">
-      <input
-        type="checkbox"
-        name="toggle"
-        id="toggle"
-        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-        checked={value}
-        onChange={handleToggle}
-      />
-      <label
-        htmlFor="toggle"
-        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-      ></label>
-    </div>
+  const response = await fetch(
+    `http://35.163.109.26:3000/EmployeeResourcesAPI/addAssignment`,
+    options
   );
-}
+  return await response.json();
+};
+
 //fetch
 const GET_Preview = async (args) => {
   //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
@@ -214,6 +246,29 @@ const previewRemoveShift = async (args) => {
 };
 
 //third party components
+
+function Slider({ value, onChange }) {
+  const handleToggle = () => {
+    onChange(!value);
+  };
+
+  return (
+    <div className="relative inline-block w-10 mr-2 align-middle select-none">
+      <input
+        type="checkbox"
+        name="toggle"
+        id="toggle"
+        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+        checked={value}
+        onChange={handleToggle}
+      />
+      <label
+        htmlFor="toggle"
+        className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+      ></label>
+    </div>
+  );
+}
 
 const AlertCard = ({ title, message }) => {
   return (
@@ -376,20 +431,6 @@ const Employee = () => {
   //edit modal states
   const shiftDefault = ["start", "end"];
   const [shiftOption, setShiftOption] = useState("Select Shift"); //request option
-  const employeeData = [
-    { name: "Oscar Maldonado", e_id: "000002" },
-    { name: "Jennifer Maldonado", e_id: "00001" },
-    { name: "Juan Pablo", e_id: "001111" },
-    { name: "Maria Maldonado", e_id: "003222" },
-    { name: "Jose Adalberto Enciso", e_id: "230114" },
-  ];
-  const EmpOptions = [
-    "Oscar Maldonado",
-    "Jennifer Maldonado",
-    "Juan Pablo",
-    "Maria Maldonado",
-    "Jose Adalberto Enciso",
-  ];
   const [employee, setEmployee] = useState("Select Employee");
   const [selEmployeeData, setSelEmployeeData] = useState(""); //request option
   const [selectedDate, setSelectedDate] = useState(Date.now()); //request option
@@ -467,7 +508,7 @@ const Employee = () => {
 
   useEffect(() => {
     if (emp != "Select Employee") {
-      const empres = EmpDataA.filter((val) => {
+      const empres = local_data.gen_emp_all.filter((val) => {
         if (emp == val.name) {
           return val;
         }
@@ -478,7 +519,7 @@ const Employee = () => {
 
   useEffect(() => {
     if (employee != "Select Employee") {
-      const emp = employeeData.filter((val) => {
+      const emp = local_data.emp_data.filter((val) => {
         if (employee == val.name) {
           return val;
         }
@@ -492,6 +533,22 @@ const Employee = () => {
   const [rangeStart, setRangeStart] = useState(0); //request option
   const [rangeEnd, setRangeEnd] = useState(0); //request option
   const [selectedDate3, setSelectedDate3] = useState(Date.now()); //request option
+  const [response, serResponse] = useState(null); //request option
+  const [previewDataAdd, setPreviewDataAdd] = useState({}); //request option
+
+  const submitAdd = async (args) => {
+    const data = await Add_Assigment(args);
+    serResponse(data);
+  };
+
+  useEffect(() => {
+    setPreviewDataAdd({
+      employee: emp ? emp : null,
+      date: selectedDate3 ? selectedDate3 : null,
+      range: [rangeStart ? rangeStart : 0, rangeEnd ? rangeEnd : 0],
+      total: Math.abs(rangeEnd - rangeStart),
+    });
+  }, [rangeStart, rangeEnd, selectedDate3, emp]);
 
   //edit assignment modal states
   const [isModalEditAssignOpen, setIsModalEditAssignOpen] = useState(false);
@@ -539,6 +596,8 @@ const Employee = () => {
 
     if (val == "add") {
       setIsModalAddOpen(false);
+      setPreviewDataAdd({});
+      serResponse(null);
     }
     if (val == "edit") {
       setStatus(null);
@@ -679,7 +738,7 @@ const Employee = () => {
                     <DropdownButton
                       setData={setEmployee}
                       dataValue={employee}
-                      data={{ data: EmpOptions }}
+                      data={{ data: local_data.emps }}
                     />
                   </div>
                   <div>
@@ -794,7 +853,7 @@ const Employee = () => {
                       <DropdownButton
                         setData={setEmployee}
                         dataValue={employee}
-                        data={{ data: EmpOptions }}
+                        data={{ data: local_data.emps }}
                       />
                     </div>
                     <div>
@@ -914,7 +973,7 @@ const Employee = () => {
                 <DropdownButton
                   setData={setEmp}
                   dataValue={emp}
-                  data={{ data: EmpData }}
+                  data={{ data: local_data.gen_emps }}
                 />
               </div>
               <div className="mb-4 md:mb-0">
@@ -952,75 +1011,90 @@ const Employee = () => {
         </>
       )}
       {/* add assignment modal */}
-      {isModalAddOpen && (
-        <>
-          <ModalBackground onClick={() => handleModalClose("add")} />
-          <ModalContainer>
-            <ModalHeader className="sticky top-0 z-10 bg-white">
-              <ModalTitle className="text-black">Assignment Utility</ModalTitle>
-              <ModalCloseButton onClick={() => handleModalClose("add")}>
-                <FaTimes className="w-5 h-5 mr-2" />
-              </ModalCloseButton>
-            </ModalHeader>
-            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-b-2 border-black/20">
-              <div className="mb-4 md:mb-0">
-                <p className="text-black">Select Employee</p>
-                <DropdownButton
-                  setData={setEmp}
-                  dataValue={emp}
-                  data={{ data: EmpData }}
-                />
+      {isModalAddOpen &&
+        (response == null ? (
+          <>
+            <ModalBackground onClick={() => handleModalClose("add")} />
+            <ModalContainer>
+              <ModalHeader className="sticky top-0 z-10 bg-white">
+                <ModalTitle className="text-black">
+                  Assignment Utility
+                </ModalTitle>
+                <ModalCloseButton onClick={() => handleModalClose("add")}>
+                  <FaTimes className="w-5 h-5 mr-2" />
+                </ModalCloseButton>
+              </ModalHeader>
+              <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-b-2 border-black/20">
+                <div className="mb-4 md:mb-0">
+                  <p className="text-black">Select Employee</p>
+                  <DropdownButton
+                    setData={setEmp}
+                    dataValue={emp}
+                    data={{ data: local_data.emps }}
+                  />
+                </div>
+                <div className="mb-4 md:mb-0">
+                  <p className="text-black">Select Date</p>
+                  <Datepicker
+                    selected={selectedDate3}
+                    setSelected={setSelectedDate3}
+                  />
+                </div>
+                <div>
+                  <label className="text-black">Enter Start Range</label>
+                  <input
+                    type={"number"}
+                    className="text-black rounded-lg border border-black/20 p-2"
+                    value={rangeStart}
+                    onChange={(e) => {
+                      setRangeStart(e.target.value);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="text-black">Enter End Range</label>
+                  <input
+                    type={"number"}
+                    className="text-black rounded-lg border border-black/20 p-2"
+                    value={rangeEnd}
+                    onChange={(e) => {
+                      setRangeEnd(e.target.value);
+                    }}
+                  />
+                </div>
               </div>
-              <div className="mb-4 md:mb-0">
-                <p className="text-black">Select Date</p>
-                <Datepicker
-                  selected={selectedDate3}
-                  setSelected={setSelectedDate3}
-                />
+              <div className="text-black flex justify-center items-center text-3xl mt-20">
+                <div className="w-auto h-auto text-center opacity-50">
+                  <div className="text-black">
+                    Assignment Object: {"{ "}Employee: {previewDataAdd.employee}
+                    , Range: {previewDataAdd.range[0]} to{" "}
+                    {previewDataAdd.range[1]}, Total Orders:{" "}
+                    {previewDataAdd.total}
+                    {" }"}
+                  </div>
+                </div>
               </div>
-              <div>
-                <label className="text-black">Enter Start Range</label>
-                <input
-                  type={"number"}
-                  className="text-black rounded-lg border border-black/20 p-2"
-                  value={rangeStart}
-                  onChange={(e) => {
-                    setRangeStart(e.target.value);
-                  }}
-                />
-              </div>
-              <div>
-                <label className="text-black">Enter End Range</label>
-                <input
-                  type={"number"}
-                  className="text-black rounded-lg border border-black/20 p-2"
-                  value={rangeEnd}
-                  onChange={(e) => {
-                    setRangeEnd(e.target.value);
-                  }}
-                />
-              </div>
-            </div>
-            {/* preview data useEffect*/}
 
-            <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
-              <button
-                className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
-                onClick={() => {
-                  submitRemove({
-                    e_id: selEmployeeData,
-                    date: selectedDate,
-                    shiftOption: shiftOption,
-                    hours: hours,
-                  });
-                }}
-              >
-                Add Assignment
-              </button>
-            </div>
-          </ModalContainer>
-        </>
-      )}
+              <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
+                <button
+                  className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
+                  onClick={() => {
+                    Add_Assigment({
+                      e_id: emp,
+                      date: selectedDate3,
+                      rangeStart: rangeStart,
+                      rangeEnd: rangeEnd,
+                    });
+                  }}
+                >
+                  Add Assignment
+                </button>
+              </div>
+            </ModalContainer>
+          </>
+        ) : (
+          <div> Assignment added for the employee!</div>
+        ))}
       {/* edit add assignment modal */}
       {isModalEditAssignOpen && (
         <>
@@ -1040,7 +1114,7 @@ const Employee = () => {
                 <DropdownButton
                   setData={setEmp}
                   dataValue={emp}
-                  data={{ data: EmpData }}
+                  data={{ data: local_data.emps }}
                 />
               </div>
               <div className="mb-4 md:mb-0">
@@ -1048,7 +1122,7 @@ const Employee = () => {
                 <DropdownButton
                   setData={setEmp}
                   dataValue={emp}
-                  data={{ data: EmpData }}
+                  data={{ data: local_data.emps }}
                 />
               </div>
               <div className="mb-4 md:mb-0">
@@ -1109,7 +1183,7 @@ const Employee = () => {
                 <DropdownButton
                   setData={setEmp}
                   dataValue={emp}
-                  data={{ data: EmpData }}
+                  data={{ data: local_data.emps }}
                 />
               </div>
               <div className="mb-4 md:mb-0">
@@ -1117,7 +1191,7 @@ const Employee = () => {
                 <DropdownButton
                   setData={setEmp}
                   dataValue={emp}
-                  data={{ data: EmpData }}
+                  data={{ data: local_data.emps }}
                 />
               </div>
               <div className="mb-4 md:mb-0">
@@ -1178,7 +1252,7 @@ const Employee = () => {
                 <DropdownButton
                   setData={setEmp}
                   dataValue={emp}
-                  data={{ data: EmpData }}
+                  data={{ data: local_data.emps }}
                 />
               </div>
               <div className="mb-4 md:mb-0">
@@ -1186,7 +1260,7 @@ const Employee = () => {
                 <DropdownButton
                   setData={setEmp}
                   dataValue={emp}
-                  data={{ data: EmpData }}
+                  data={{ data: local_data.emps }}
                 />
               </div>
               <div className="mb-4 md:mb-0">
