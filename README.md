@@ -1,3 +1,16 @@
+Dashboard
+<img width="1503" alt="Screenshot 2023-05-21 at 12 04 11 PM" src="https://github.com/oscarmmgg1234/ZUMA_DASHBOARD/assets/45194139/f188bbf0-c8e4-4e56-a7a9-c4c34aac5dd2">
+
+Employee functionality
+<img width="1512" alt="Screenshot 2023-05-21 at 12 02 30 PM" src="https://github.com/oscarmmgg1234/ZUMA_DASHBOARD/assets/45194139/20295c14-0bd5-4afb-baeb-72b3032225d4">
+<img width="1342" alt="Screenshot 2023-05-21 at 12 09 36 PM" src="https://github.com/oscarmmgg1234/ZUMA_DASHBOARD/assets/45194139/64e04f9e-d103-46b7-90dc-1a5585d37581">
+<img width="1288" alt="Screenshot 2023-05-21 at 12 07 56 PM" src="https://github.com/oscarmmgg1234/ZUMA_DASHBOARD/assets/45194139/cb4f0064-a0f0-4f81-a28c-e30981fb8444">
+<img width="1305" alt="Screenshot 2023-05-21 at 12 08 38 PM" src="https://github.com/oscarmmgg1234/ZUMA_DASHBOARD/assets/45194139/d3b7865a-e46a-47d8-a556-b79241fa523d">
+
+
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
