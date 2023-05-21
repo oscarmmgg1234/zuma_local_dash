@@ -7,6 +7,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+import http_handler from "./Fetch/HTTPS_INTERFACE.js";
+
+const https = new http_handler();
 
 const ModalBackground = tw.div`
   fixed
@@ -104,146 +107,7 @@ const local_data = {
     "Jose Adalberto Enciso",
     "PRINT_ALL",
   ],
-};
-const Add_Assigment = async (args) => {
-  const data = JSON.stringify({
-    e_id: args.e_id,
-    range_start: args.rangeStart,
-    range_end: args.rangeEnd,
-    date: args.date,
-  });
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Content-Length": data.length,
-    },
-    body: data,
-  };
-  const response = await fetch(
-    `http:///35.163.109.26:3000/EmployeeResourcesAPI/addAssignment`,
-    options
-  );
-
-  return await response.json();
-};
-
-//fetch
-const GET_Preview = async (args) => {
-  //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
-  const url_end =
-    args.shiftOption == "end"
-      ? "EmployeeResourcesAPI/PreviewTansformEndShift"
-      : "EmployeeResourcesAPI/PreviewTansformStartShift";
-  const data = JSON.stringify({
-    e_id: args.e_id,
-    date: args.date,
-    hours: args.hours,
-  });
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Content-Length": data.length,
-    },
-    body: data,
-  };
-  const response = await fetch(`http://35.163.109.26:3000/${url_end}`, options);
-  const responseData = await response.json();
-  return responseData;
-};
-
-const transform_shift = async (args) => {
-  //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
-  const url_end =
-    args.shiftOption == "end"
-      ? "/EmployeeResourcesAPI/TansformEndShift"
-      : "/EmployeeResourcesAPI/TansformStartShift";
-  const data = JSON.stringify({
-    e_id: args.e_id,
-    date: args.date,
-    hours: args.hours,
-  });
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Content-Length": data.length,
-    },
-    body: data,
-  };
-
-  const response = await fetch(`http://35.163.109.26:3000${url_end}`, options);
-  const responseData = await response.json();
-  return responseData;
-};
-
-const pdf_get = async (args) => {
-  //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
-
-  const url_end =
-    args.e_id == "PRINT_ALL"
-      ? "/EmployeeResourcesAPI/Generate_Time_sheet_all"
-      : "/EmployeeResourcesAPI/Generate_Time_sheet";
-  const data = JSON.stringify({
-    employee_id: args.e_id,
-    shift_start_range: args.date1,
-    shift_end_range: args.date2,
-  });
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Content-Length": data.length,
-    },
-    body: data,
-  };
-
-  const response = await fetch(`http://35.163.109.26:3000${url_end}`, options);
-  return response.blob();
-};
-
-const removeShift = async (args) => {
-  //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
-  const data = JSON.stringify({
-    e_id: args.e_id,
-    date: args.date,
-    revert: args.revert,
-  });
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Content-Length": data.length,
-    },
-    body: data,
-  };
-
-  const response = await fetch(
-    `http://35.163.109.26:3000/EmployeeResourcesAPI/RemoveShift`,
-    options
-  );
-  const responseData = await response.json();
-  return responseData;
-};
-
-const previewRemoveShift = async (args) => {
-  const data = JSON.stringify({ e_id: args.e_id, date: args.date, hours: "1" });
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Content-Length": data.length,
-    },
-    body: data,
-  };
-
-  const response = await fetch(
-    `http://35.163.109.26:3000/EmployeeResourcesAPI/PreviewRemoveShift`,
-    options
-  );
-  const responseData = await response.json();
-  return responseData;
+  emp_option: ["start", "end"],
 };
 
 //third party components
@@ -553,6 +417,9 @@ const Employee = () => {
 
   //edit assignment modal states
   const [isModalEditAssignOpen, setIsModalEditAssignOpen] = useState(false);
+  const [C_Range, setC_Range] = useState("Select Range Option"); //request option
+  const [previewEditAdd, setPreviewEditAdd] = useState({}); //request option
+  const [transitionEdit, setTransitionEdit] = useState(false); //use this to make buttom ask to pull employee entrys => then select one and populate preview edit add with chosen entry button at this point says modify entry => then val 3 for tahnks for modifying...on close set to 0
 
   //remove assignment modal states
   const [isModalRmAssignOpen, setIsModalRmAssignOpen] = useState(false);
@@ -593,6 +460,10 @@ const Employee = () => {
     }
     if (val == "editAssign") {
       setIsModalEditAssignOpen(false);
+      setEmp("Select Employee");
+      setSelEmployeeData("");
+      setRangeStart(0);
+      setC_Range("Select Range Option");
     }
 
     if (val == "add") {
@@ -1136,9 +1007,9 @@ const Employee = () => {
               <div className="mb-4 md:mb-0">
                 <p className="text-black">Select Range Option</p>
                 <DropdownButton
-                  setData={setEmp}
-                  dataValue={emp}
-                  data={{ data: local_data.emps }}
+                  setData={setC_Range}
+                  dataValue={C_Range}
+                  data={{ data: local_data.emp_option }}
                 />
               </div>
               <div className="mb-4 md:mb-0">
@@ -1160,22 +1031,38 @@ const Employee = () => {
                 />
               </div>
             </div>
-            {/* preview data useEffect*/}
+            {/* preview data */}
 
             <div className="flex flex-col sm:flex-row justify-center items-center sm:mt-8 lg:mt-16">
-              <button
-                className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
-                onClick={() => {
-                  submitRemove({
-                    e_id: selEmployeeData,
-                    date: selectedDate,
-                    shiftOption: shiftOption,
-                    hours: hours,
-                  });
-                }}
-              >
-                Change Shift Entry
-              </button>
+              {!transitionEdit ? (
+                <button
+                  className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
+                  onClick={() => {
+                    submitRemove({
+                      e_id: selEmployeeData,
+                      date: selectedDate,
+                      shiftOption: shiftOption,
+                      hours: hours,
+                    });
+                  }}
+                >
+                  Get Employee Assign Entries
+                </button>
+              ) : (
+                <button
+                  className="w-full sm:w-auto rounded-lg text-black border border-3 bg-orange-500/80 px-4 py-2"
+                  onClick={() => {
+                    submitRemove({
+                      e_id: selEmployeeData,
+                      date: selectedDate,
+                      shiftOption: shiftOption,
+                      hours: hours,
+                    });
+                  }}
+                >
+                  Change Assignment Range
+                </button>
+              )}
             </div>
           </ModalContainer>
         </>

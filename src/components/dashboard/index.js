@@ -1,64 +1,61 @@
-
-import { Fragment, useState } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { signOut, useSession } from 'next-auth/react'
-import Employee from './pages/employee/main';
-import Inventory from './pages/inventory/main';
-import Dashboard from './pages/dashboard/main';
+import { Fragment, useState } from "react";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { signOut, useSession } from "next-auth/react";
+import Employee from "./pages/employee/main";
+import Inventory from "./pages/inventory/main";
+import Dashboard from "./pages/dashboard/main";
 
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
-
-
+  { name: "Your Profile", href: "#" },
+  { name: "Settings", href: "#" },
+  { name: "Sign out", href: "#" },
+];
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
-
 export default function Index(props) {
-  
-
   const [navigation, setNavigation] = useState([
-    { name: 'Dashboard', href: '#', current: true, component: <Dashboard/>},
-    { name: 'Employees',href: '#',current: false, component: <Employee/> },
-    { name: 'Inventory', href: '#', current: false, component: <Inventory/>},
-  ])
+    { name: "Dashboard", href: "#", current: true, component: <Dashboard /> },
+    { name: "Employees", href: "#", current: false, component: <Employee /> },
+    { name: "Inventory", href: "#", current: false, component: <Inventory /> },
+  ]);
 
-  const [currentView, setView] = useState({ name: 'Dashboard', href: '#', current: true, component: <Dashboard/>})
+  const [currentView, setView] = useState({
+    name: "Dashboard",
+    href: "#",
+    current: true,
+    component: <Dashboard />,
+  });
 
   const renderComponent = () => {
-    
     return currentView.component;
-  }
+  };
 
   const renderTitle = () => {
     return currentView.name;
-  }
+  };
 
-  function handle_nav_change(item){
-    const newNav = navigation.map((obj,index) => {
+  function handle_nav_change(item) {
+    const newNav = navigation.map((obj, index) => {
       if (obj.name == item.name) {
         setView(obj);
-        return {...obj, current: true}
+        return { ...obj, current: true };
       } else {
-        
-        return {...obj, current: false}
+        return { ...obj, current: false };
       }
     });
     setNavigation(newNav);
-  };
+  }
 
   const { data: session, status } = useSession();
   const user = {
     name: session.user_json_data[0].NAME,
     email: session.user_json_data[0].EMAIL,
-    imageUrl: session.user_json_data[0].IMG_URL
-  }
+    imageUrl: session.user_json_data[0].IMG_URL,
+  };
   return (
     <>
       {/*
@@ -77,9 +74,9 @@ export default function Index(props) {
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <div
-                        className="text-4xl text-zuma-login font-medium"
-                      >ZUMA</div>
+                      <div className="text-4xl text-zuma-login font-medium">
+                        ZUMA
+                      </div>
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
@@ -87,14 +84,14 @@ export default function Index(props) {
                           <button
                             key={item.name}
                             href={item.href}
-                            onClick={()=>handle_nav_change(item)}
+                            onClick={() => handle_nav_change(item)}
                             className={classNames(
                               item.current
-                                ? 'bg-gray-900 text-white'
-                                : 'text-black/70 hover:bg-gray-700 hover:text-white',
-                              'rounded-md px-3 py-2 text-sm font-medium'
+                                ? "bg-gray-900 text-white"
+                                : "text-black/70 hover:bg-gray-700 hover:text-white",
+                              "rounded-md px-3 py-2 text-sm font-medium"
                             )}
-                            aria-current={item.current ? 'page' : undefined}
+                            aria-current={item.current ? "page" : undefined}
                           >
                             {item.name}
                           </button>
@@ -117,7 +114,11 @@ export default function Index(props) {
                         <div>
                           <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span className="sr-only">Open user menu</span>
-                            <img className="h-12 w-12 rounded-full " src={user.imageUrl} alt="" />
+                            <img
+                              className="h-12 w-12 rounded-full "
+                              src={user.imageUrl}
+                              alt=""
+                            />
                           </Menu.Button>
                         </div>
                         <Transition
@@ -135,10 +136,18 @@ export default function Index(props) {
                                 {({ active }) => (
                                   <a
                                     href={item.href}
-                                    onClick={item.name == "Sign out" ? ()=> signOut({redirect: true, path: '/'}) : null}
+                                    onClick={
+                                      item.name == "Sign out"
+                                        ? () =>
+                                            signOut({
+                                              redirect: true,
+                                              path: "/",
+                                            })
+                                        : null
+                                    }
                                     className={classNames(
-                                      active ? 'bg-gray-100' : '',
-                                      'block px-4 py-2 text-sm text-gray-700'
+                                      active ? "bg-gray-100" : "",
+                                      "block px-4 py-2 text-sm text-gray-700"
                                     )}
                                   >
                                     {item.name}
@@ -156,9 +165,15 @@ export default function Index(props) {
                     <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
-                        <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                        <XMarkIcon
+                          className="block h-6 w-6"
+                          aria-hidden="true"
+                        />
                       ) : (
-                        <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                        <Bars3Icon
+                          className="block h-6 w-6"
+                          aria-hidden="true"
+                        />
                       )}
                     </Disclosure.Button>
                   </div>
@@ -172,12 +187,14 @@ export default function Index(props) {
                       key={item.name}
                       as="a"
                       href={item.href}
-                      onClick={()=>handle_nav_change(item)}
+                      onClick={() => handle_nav_change(item)}
                       className={classNames(
-                        item.current ? 'bg-gray-900 text-gray' : 'text-white-300 hover:bg-gray-700 hover:text-white',
-                        'block rounded-md px-3 py-2 text-base font-medium'
+                        item.current
+                          ? "bg-gray-900 text-gray"
+                          : "text-white-300 hover:bg-gray-700 hover:text-white",
+                        "block rounded-md px-3 py-2 text-base font-medium"
                       )}
-                      aria-current={item.current ? 'page' : undefined}
+                      aria-current={item.current ? "page" : undefined}
                     >
                       {item.name}
                     </Disclosure.Button>
@@ -186,11 +203,19 @@ export default function Index(props) {
                 <div className="border-t border-gray-700 pb-3 pt-4">
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
-                      <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                      <img
+                        className="h-10 w-10 rounded-full"
+                        src={user.imageUrl}
+                        alt=""
+                      />
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">{user.name}</div>
-                      <div className="text-sm font-medium leading-none text-white">{user.email}</div>
+                      <div className="text-base font-medium leading-none text-white">
+                        {user.name}
+                      </div>
+                      <div className="text-sm font-medium leading-none text-white">
+                        {user.email}
+                      </div>
                     </div>
                     <button
                       type="button"
@@ -220,18 +245,19 @@ export default function Index(props) {
 
         <header className="bg-white shadow">
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">{renderTitle()}</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+              {renderTitle()}
+            </h1>
           </div>
         </header>
         <main>
-          <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 bg-black">
-          <div className='text-black'>{session.user_json_data[0].IMG_URL}</div>
+          <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
             <div>{renderComponent()}</div>
-            
-            {/* Your content */}</div>
+
+            {/* Your content */}
+          </div>
         </main>
       </div>
-
     </>
-  )
+  );
 }
