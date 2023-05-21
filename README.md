@@ -1,3 +1,7 @@
+Manage System Architecture
+<img width="1305" alt="Screenshot 2023-05-21 at 12 08 38 PM" src="https://github.com/oscarmmgg1234/ZUMA_DASHBOARD/assets/45194139/d4fa6164-ccb7-4895-8ed6-e92a2f52fbea">
+
+
 Dashboard
 <img width="1503" alt="Screenshot 2023-05-21 at 12 04 11 PM" src="https://github.com/oscarmmgg1234/ZUMA_DASHBOARD/assets/45194139/f188bbf0-c8e4-4e56-a7a9-c4c34aac5dd2">
 
