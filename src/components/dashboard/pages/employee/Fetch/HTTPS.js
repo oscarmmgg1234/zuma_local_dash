@@ -14,7 +14,7 @@ export const Add_Assigment = async (args) => {
     body: data,
   };
   const response = await fetch(
-    `http:///35.163.109.26:3000/EmployeeResourcesAPI/addAssignment`,
+    `http://localhost:3001/EmployeeResourcesAPI/addAssignment`,
     options
   );
 
@@ -40,7 +40,7 @@ export const GET_Preview = async (args) => {
     },
     body: data,
   };
-  const response = await fetch(`http://35.163.109.26:3000/${url_end}`, options);
+  const response = await fetch(`http://localhost:3001/${url_end}`, options);
   const responseData = await response.json();
   return responseData;
 };
@@ -65,7 +65,7 @@ export const transform_shift = async (args) => {
     body: data,
   };
 
-  const response = await fetch(`http://35.163.109.26:3000${url_end}`, options);
+  const response = await fetch(`http://localhost:3001${url_end}`, options);
   const responseData = await response.json();
   return responseData;
 };
@@ -91,10 +91,9 @@ export const pdf_get = async (args) => {
     body: data,
   };
 
-  const response = await fetch(`http://35.163.109.26:3000${url_end}`, options);
+  const response = await fetch(`http://localhost:3001${url_end}`, options);
   return response.blob();
 };
-
 
 const removeShift = async (args) => {
   //args = {shiftOption: "end", e_id: 00001, date: "2023-04-30", hours: 8}
@@ -113,7 +112,7 @@ const removeShift = async (args) => {
   };
 
   const response = await fetch(
-    `http://35.163.109.26:3000/EmployeeResourcesAPI/RemoveShift`,
+    `http://localhost:3001/EmployeeResourcesAPI/RemoveShift`,
     options
   );
   const responseData = await response.json();
@@ -141,7 +140,7 @@ export const previewRemoveShift = async (args) => {
   };
 
   const response = await fetch(
-    `http://35.163.109.26:3000/EmployeeResourcesAPI/PreviewRemoveShift`,
+    `http://localhost:3001/EmployeeResourcesAPI/PreviewRemoveShift`,
     options
   );
   const responseData = await response.json();

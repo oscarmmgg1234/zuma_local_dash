@@ -1,10 +1,7 @@
 import { Fragment, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { signOut, useSession } from "next-auth/react";
 import Employee from "./pages/employee/main";
-import Inventory from "./pages/inventory/main";
-import Dashboard from "./pages/dashboard/main";
 
 const userNavigation = [
   { name: "Your Profile", href: "#" },
@@ -18,16 +15,14 @@ function classNames(...classes) {
 
 export default function Index(props) {
   const [navigation, setNavigation] = useState([
-    { name: "Dashboard", href: "#", current: true, component: <Dashboard /> },
-    { name: "Employees", href: "#", current: false, component: <Employee /> },
-    { name: "Inventory", href: "#", current: false, component: <Inventory /> },
+    { name: "Dashboard", href: "#", current: true, component: <Employee /> },
   ]);
 
   const [currentView, setView] = useState({
     name: "Dashboard",
     href: "#",
     current: true,
-    component: <Dashboard />,
+    component: <Employee />,
   });
 
   const renderComponent = () => {
@@ -50,12 +45,6 @@ export default function Index(props) {
     setNavigation(newNav);
   }
 
-  const { data: session, status } = useSession();
-  const user = {
-    name: session.user_json_data[0].NAME,
-    email: session.user_json_data[0].EMAIL,
-    imageUrl: session.user_json_data[0].IMG_URL,
-  };
   return (
     <>
       {/*
@@ -114,11 +103,6 @@ export default function Index(props) {
                         <div>
                           <Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span className="sr-only">Open user menu</span>
-                            <img
-                              className="h-12 w-12 rounded-full "
-                              src={user.imageUrl}
-                              alt=""
-                            />
                           </Menu.Button>
                         </div>
                         <Transition
@@ -138,11 +122,9 @@ export default function Index(props) {
                                     href={item.href}
                                     onClick={
                                       item.name == "Sign out"
-                                        ? () =>
-                                            signOut({
-                                              redirect: true,
-                                              path: "/",
-                                            })
+                                        ? () => {
+                                            console.log("sign out");
+                                          }
                                         : null
                                     }
                                     className={classNames(
@@ -202,19 +184,13 @@ export default function Index(props) {
                 </div>
                 <div className="border-t border-gray-700 pb-3 pt-4">
                   <div className="flex items-center px-5">
-                    <div className="flex-shrink-0">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={user.imageUrl}
-                        alt=""
-                      />
-                    </div>
+                    <div className="flex-shrink-0"></div>
                     <div className="ml-3">
                       <div className="text-base font-medium leading-none text-white">
-                        {user.name}
+                        {"Juan Garcia"}
                       </div>
                       <div className="text-sm font-medium leading-none text-white">
-                        {user.email}
+                        {"Production Manager"}
                       </div>
                     </div>
                     <button

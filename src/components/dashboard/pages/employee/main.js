@@ -308,7 +308,7 @@ const Employee = () => {
       selectedDate != null &&
       shiftOption != "Select Shift"
     ) {
-      const data = await GET_Preview(args);
+      const data = await https.preview_transform_shift(args);
       setPreviewData(data);
     }
   };
@@ -318,7 +318,7 @@ const Employee = () => {
       selectedDate != null &&
       shiftOption != "Select Shift"
     ) {
-      const data = await transform_shift(args);
+      const data = await https.transform_shift(args);
       setStatus(data);
     }
   };
@@ -327,13 +327,13 @@ const Employee = () => {
   const [revert, setRevert] = useState(false);
   const removePreviewData = async (args) => {
     if (selEmployeeData != "Select Employee" && selectedDate != null) {
-      const data = await previewRemoveShift(args);
+      const data = await https.previewRemoveShift(args);
       setPreviewData(data);
     }
   };
   const submitRemove = async (args) => {
     if (selEmployeeData != "Select Employee" && selectedDate != null) {
-      const data = await removeShift(args);
+      const data = await https.removeShift(args);
       setStatus(data);
     }
   };
@@ -342,22 +342,6 @@ const Employee = () => {
   const [selectedDate1, setSelectedDate1] = useState(Date.now()); //request option
   const [selectedDate2, setSelectedDate2] = useState(Date.now()); //request option
   const [pdfBlob, setPdfBlob] = useState(null); //request option
-  const EmpDataA = [
-    { name: "Oscar Maldonado", e_id: "000002" },
-    { name: "Jennifer Maldonado", e_id: "00001" },
-    { name: "Juan Pablo", e_id: "001111" },
-    { name: "Maria Maldonado", e_id: "003222" },
-    { name: "Jose Adalberto Enciso", e_id: "230114" },
-    { name: "PRINT_ALL", e_id: "PRINT_ALL" },
-  ];
-  const EmpData = [
-    "Oscar Maldonado",
-    "Jennifer Maldonado",
-    "Juan Pablo",
-    "Maria Maldonado",
-    "Jose Adalberto Enciso",
-    "PRINT_ALL",
-  ];
   const [emp, setEmp] = useState("Select Employee");
   const [empData, setEmpData] = useState(""); //request option
   const gen_pdf = async (args) => {
@@ -366,7 +350,7 @@ const Employee = () => {
       selectedDate2 != null &&
       emp != "Select Employee"
     ) {
-      const data = await pdf_get(args);
+      const data = await https.pdf_get(args);
       setPdfBlob(data);
     }
   };
@@ -402,7 +386,7 @@ const Employee = () => {
   const [previewDataAdd, setPreviewDataAdd] = useState({}); //request option
 
   const submitAdd = async (args) => {
-    const data = await Add_Assigment(args);
+    const data = await https.add_assignment(args);
     serResponse(data);
   };
 
@@ -570,24 +554,7 @@ const Employee = () => {
           </SubComponent>
         </Card>
       </CardGrid>
-      <div className="hidden lg:block fixed bottom-0 left-0 w-full bg-red-500 py-2">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            <AlertCard
-              title="Employee Alert"
-              message="Jennifer missed today."
-            />
-            <AlertCard
-              title="Shift Alert"
-              message="Oscar changed his end shift"
-            />
-            <AlertCard
-              title="Generation Alert"
-              message="Generated Time Report for Oscar"
-            />
-          </div>
-        </div>
-      </div>
+     
       {/* edit modal */}
       {isModalEditOpen && (
         <>
